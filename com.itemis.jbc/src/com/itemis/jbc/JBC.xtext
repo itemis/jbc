@@ -1,0 +1,405 @@
+grammar com.itemis.jbc.JBC with org.eclipse.xtext.common.Terminals
+
+generate jbc "http://www.itemis.com/jbc/JBC"
+//import "http://www.itemis.com/jbc/JBC"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+ClassFile:
+	'ClassFile' '{'
+	magic=U4 minorVersion=U2 majorVersion=U2 constantPoolCount=U2 constantPool=ConstantPool
+	accessFlags=U2 thisClass=[ConstantClass|HEX4] superClass=[ConstantClass|HEX4] interfaceCount=U2 interfaces=Interfaces
+	fieldsCount=U2 fields=Fields
+	methodsCount=U2 methods=Methods
+	attributesCount=U2 attributes=Attributes
+	'}';
+
+ConstantPool:
+	{ConstantPool} 'ConstantPool' '{' cpInfo+=ConstantPoolEntry* '}';
+
+ConstantPoolEntry:
+	ConstantClass
+	| ConstantFieldRef
+	| ConstantMethodRef
+	| ConstantInterfaceMethodRef
+	| ConstantString
+	| ConstantInteger
+	| ConstantFloat
+	| ConstantLong
+	| ConstantDouble
+	| ConstantNameAndType
+	| ConstantUtf8
+	| ConstantMethodHandle
+	| ConstantMethodType
+	| ConstantInvoceDynamic;
+
+ConstantClass:
+	'class' tag=U1 nameIndex=[ConstantUtf8|HEX4];
+
+ConstantFieldRef:
+	'fieldRef' tag=U1 classIndex=[ConstantClass|HEX4] nameAndTypeIndex=[ConstantNameAndType|HEX4];
+
+ConstantMethodRef:
+	'methodRef' tag=U1 classIndex=[ConstantClass|HEX4] nameAndTypeIndex=[ConstantNameAndType|HEX4];
+
+ConstantInterfaceMethodRef:
+	'interfaceMethodRef' tag=U1 classIndex=[ConstantClass|HEX4] nameAndTypeIndex=[ConstantNameAndType|HEX4];
+
+ConstantString:
+	'string' tag=U1 stringIndex=[ConstantUtf8|HEX4];
+
+ConstantInteger:
+	'integer' tag=U1 bytes=U4;
+
+ConstantFloat:
+	'float' tag=U1 bytes=U4;
+
+ConstantLong:
+	'long' tag=U1 highBytes=U4 lowBytes=U4;
+
+ConstantDouble:
+	'double' tag=U1 highBytes=U4 lowBytes=U4;
+
+ConstantNameAndType:
+	'nameAndType' tag=U1 nameIndex=[ConstantUtf8|HEX4] descriptorIndex=[ConstantUtf8|HEX4];
+
+ConstantUtf8:
+	'utf8' tag=U1 content=UString;
+
+ // TODO make it more specific ... possible values of 'referenceIndex' are based on 'referenceKind'
+ConstantMethodHandle:
+	'methodHandle' tag=U1 referenceKind=U1 referenceIndex=[ConstantPoolEntry|HEX4];
+
+ConstantMethodType:
+	'methodType' tag=U1 descriptorIndex=[ConstantUtf8|HEX4] ;
+
+// TODO implement reference for 'bootstrapMethodAttrIndex' ... something into the bootstrap method table
+ConstantInvoceDynamic:
+	'invoceDynamic' tag=U1 bootstrapMethodAttrIndex=U2  nameAndTypeIndex=[ConstantNameAndType|HEX4] ;
+
+Interfaces:
+	{Interfaces} 'Interfaces' '{' interfaceInfo+=Interface* '}';
+	
+Interface:
+	info=[ConstantClass|HEX4];
+
+Fields:
+	{Fields} 'Fields' '{' fieldInfo+=FieldInfo* '}';
+
+FieldInfo:
+	'field' accessFlags=U2 nameIndex=[ConstantUtf8|HEX4] descriptorIndex=[ConstantUtf8|HEX4] attributesCount=U2 attributes=Attributes;
+
+Methods:
+	{Methods} 'Methods' '{' methodsInfo+=MethodInfo* '}';
+
+MethodInfo:
+	'method' accessFlags=U2 nameIndex=[ConstantUtf8|HEX4] descriptorIndex=[ConstantUtf8|HEX4] attributesCount=U2 attributes=Attributes;
+
+Attributes:
+	{Attributes} 'Attributes' '{' attributeInfo+=AttributeInfo* '}';
+
+AttributeInfo:
+	Unknown
+	| ConstantValue
+	| Code
+	| SourceFile
+	| LineNumberTable
+	| LocalVariableTable
+	| Exceptions
+	| InnerClasses;
+
+Unknown:
+	'unknown' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 'Info' '{' info+=U1* '}';
+
+// TODO make 'constantValueIndex' more specific
+ConstantValue:
+	'constantValue' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 constantValueIndex=[ConstantPoolEntry|HEX4];
+
+Code:
+	'code' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 maxStack=U2 maxLocals=U2 codeLength=U4 codeTable=CodeTable
+	exceptionTableLength=U2 exceptionTable=ExceptionTable attributesCount=U2 attributes=Attributes;
+
+CodeTable:
+	{CodeTable}
+	'Code' '{' instruction+=CodeTableEntry* '}';
+
+CodeTableEntry:
+	AALOAD | AASTORE | ACONST_NULL | ALOAD | ALOAD_0 | ALOAD_1 | ALOAD_2 | ALOAD_3 | ANEWARRAY | ARETURN | ARRAYLENGTH |
+	ASTORE | ASTORE_0 | ASTORE_1 | ASTORE_2 | ASTORE_3 | ATHROW | BALOAD | BASTORE | BIPUSH | CALOAD | CASTORE |
+	CHECKCAST | D2F | D2I | D2L | DADD | DALOAD | DASTORE | DCMPG | DCMPL | DCONST_0 | DCONST_1 | DDIV | DLOAD | DLOAD_0
+	| DLOAD_1 | DLOAD_2 | DLOAD_3 | DMUL | DNEG | DREM | DRETURN | DSTORE | DSTORE_0 | DSTORE_1 | DSTORE_2 | DSTORE_3 |
+	DSUB | DUP | DUP_X1 | DUP_X2 | DUP2 | DUP2_X1 | DUP2_X2 | F2D | F2I | F2L | FADD | FALOAD | FASTORE | FCMPG | FCMPL |
+	FCONST_0 | FCONST_1 | FCONST_2 | FDIV | FLOAD | FLOAD_0 | FLOAD_1 | FLOAD_2 | FLOAD_3 | FMUL | FNEG | FREM | FRETURN
+	| FSTORE | FSTORE_0 | FSTORE_1 | FSTORE_2 | FSTORE_3 | FSUB | GETFIELD | GETSTATIC | GOTO | GOTO_W | I2B | I2C | I2D
+	| I2F | I2L | I2S | IADD | IALOAD | IAND | IASTORE | ICONST_ML | ICONST_0 | ICONST_1 | ICONST_2 | ICONST_3 | ICONST_4
+	| ICONST_5 | IDIV | IF_ACMPEQ | IF_ACMPNE | IF_ICMPEQ | IF_ICMPGE | IF_ICMPGT | IF_ICMPLE | IF_ICMPLT | IF_ICMPNE |
+	IFEQ | IFGE | IFGT | IFLE | IFLT | IFNE | IFNONNULL | IFNULL | IINC | ILOAD | ILOAD_0 | ILOAD_1 | ILOAD_2 | ILOAD_3 |
+	IMUL | INEG | INSTANCEOF | INVOKEDYNAMIC | INVOKEINTERFACE | INVOKESPECIAL | INVOKESTATIC | INVOKEVIRTUAL | IOR |
+	IREM | IRETURN | ISHL | ISHR | ISTORE | ISTORE_0 | ISTORE_1 | ISTORE_2 | ISTORE_3 | ISUB | IUSHR | IXOR | JSR | JSR_W
+	| L2D | L2F | L2I | LADD | LALOAD | LAND | LASTORE | LCMP | LCONST_0 | LCONST_1 | LDC | LDC2_W | LDC_W | LDIV | LLOAD
+	| LLOAD_0 | LLOAD_1 | LLOAD_2 | LLOAD_3 | LMUL | LNEG | LOOKUPSWITCH | LOR | LREM | LRETURN | LSHL | LSHR | LSTORE |
+	LSTORE_0 | LSTORE_1 | LSTORE_2 | LSTORE_3 | LSUB | LUSHR | LXOR | MONITORENTER | MONITOREXIT | MULTIANEWARRAY | NEW |
+	NEWARRAY | NOP | POP | POP2 | PUTFIELD | PUTSTATIC | RET | RETURN | SALOAD | SASTORE | SIPUSH | SWAP | TABLESWITCH |
+	WIDE;
+
+AALOAD:{AALOAD} 'aaload' tag=U1;
+AASTORE:{AASTORE} 'aastore' tag=U1;
+ACONST_NULL:{ACONST_NULL} 'aconst_null' tag=U1;
+ALOAD:{ALOAD} 'aload' tag=U1 index=U1;
+ALOAD_0:{ALOAD_0} 'aload_0' tag=U1;
+ALOAD_1:{ALOAD_1} 'aload_1' tag=U1;
+ALOAD_2:{ALOAD_2} 'aload_2' tag=U1;
+ALOAD_3:{ALOAD_3} 'aload_3' tag=U1;
+ANEWARRAY:{ANEWARRAY} 'anewarray' tag=U1 index=[ConstantClass|HEX4];
+ARETURN:{ARETURN} 'areturn' tag=U1;
+ARRAYLENGTH:{ARRAYLENGTH} 'arraylength' tag=U1;
+ASTORE:{ASTORE} 'astore'tag=U1 index=U1;
+ASTORE_0:{ASTORE_0} 'astore_0' tag=U1;
+ASTORE_1:{ASTORE_1} 'astore_1' tag=U1;
+ASTORE_2:{ASTORE_2} 'astore_2' tag=U1;
+ASTORE_3:{ASTORE_3} 'astore_3' tag=U1;
+ATHROW:{ATHROW} 'athrow' tag=U1;
+BALOAD:{BALOAD} 'baload' tag=U1;
+BASTORE:{BASTORE} 'bastore' tag=U1;
+BIPUSH:{BIPUSH} 'bipush' tag=U1 byte=U1;
+CALOAD:{CALOAD} 'caload' tag=U1;
+CASTORE:{CASTORE} 'castore' tag=U1;
+CHECKCAST:{CHECKCAST} 'checkcast' tag=U1 index=[ConstantClass|HEX4];
+D2F:{D2F} 'd2f' tag=U1;
+D2I:{D2I} 'd2i' tag=U1;
+D2L:{D2L} 'd2l' tag=U1;
+DADD:{DADD} 'dadd' tag=U1;
+DALOAD:{DALOAD} 'daload' tag=U1;
+DASTORE:{DASTORE} 'dastore' tag=U1;
+DCMPG:{DCMPG} 'dcmpg' tag=U1;
+DCMPL:{DCMPL} 'dcmpl' tag=U1;
+DCONST_0:{DCONST_0} 'dconst_0' tag=U1;
+DCONST_1:{DCONST_1} 'dconst_1' tag=U1;
+DDIV:{DDIV} 'ddiv' tag=U1;
+DLOAD:{DLOAD} 'dload' tag=U1 index=U1;
+DLOAD_0:{DLOAD_0} 'dload_0' tag=U1;
+DLOAD_1:{DLOAD_1} 'dload_1' tag=U1;
+DLOAD_2:{DLOAD_2} 'dload_2' tag=U1;
+DLOAD_3:{DLOAD_3} 'dload_3' tag=U1;
+DMUL:{DMUL} 'dmul' tag=U1;
+DNEG:{DNEG} 'dneg' tag=U1;
+DREM:{DREM} 'drem' tag=U1;
+DRETURN:{DRETURN} 'dreturn' tag=U1;
+DSTORE:{DSTORE} 'dstore' tag=U1 index=U1;
+DSTORE_0:{DSTORE_0} 'dstore_0' tag=U1;
+DSTORE_1:{DSTORE_1} 'dstore_1' tag=U1;
+DSTORE_2:{DSTORE_2} 'dstore_2' tag=U1;
+DSTORE_3:{DSTORE_3} 'dstore_3' tag=U1;
+DSUB:{DSUB} 'dsub' tag=U1;
+DUP:{DUP} 'dup' tag=U1;
+DUP_X1:{DUP_X1} 'dup_x1' tag=U1;
+DUP_X2:{DUP_X2} 'dup_x2' tag=U1;
+DUP2:{DUP2} 'dup2' tag=U1;
+DUP2_X1:{DUP2_X1} 'dup2_x1' tag=U1;
+DUP2_X2:{DUP2_X2} 'dup2_x2' tag=U1;
+F2D:{F2D} 'f2d' tag=U1;
+F2I:{F2I} 'f2i' tag=U1;
+F2L:{F2L} 'f2l' tag=U1;
+FADD:{FADD} 'fadd' tag=U1;
+FALOAD:{FALOAD} 'faload' tag=U1;
+FASTORE:{FASTORE} 'fastore' tag=U1;
+FCMPG:{FCMPG} 'fcmpg' tag=U1;
+FCMPL:{FCMPL} 'fcmpl' tag=U1;
+FCONST_0:{FCONST_0} 'fconst_0' tag=U1;
+FCONST_1:{FCONST_1} 'fconst_1' tag=U1;
+FCONST_2:{FCONST_2} 'fconst_2' tag=U1;
+FDIV:{FDIV} 'fdiv' tag=U1;
+FLOAD:{FLOAD} 'fload' tag=U1 index=U1;
+FLOAD_0:{FLOAD_0} 'fload_0' tag=U1;
+FLOAD_1:{FLOAD_1} 'fload_1' tag=U1;
+FLOAD_2:{FLOAD_2} 'fload_2' tag=U1;
+FLOAD_3:{FLOAD_3} 'fload_3' tag=U1;
+FMUL:{FMUL} 'fmul' tag=U1;
+FNEG:{FNEG} 'fneg' tag=U1;
+FREM:{FREM} 'frem' tag=U1;
+FRETURN:{FRETURN} 'freturn' tag=U1;
+FSTORE:{FSTORE} 'fstore' tag=U1 index=U1;
+FSTORE_0:{FSTORE_0} 'fstore_0' tag=U1;
+FSTORE_1:{FSTORE_1} 'fstore_1' tag=U1;
+FSTORE_2:{FSTORE_2} 'fstore_2' tag=U1;
+FSTORE_3:{FSTORE_3} 'fstore_3' tag=U1;
+FSUB:{FSUB} 'fsub' tag=U1;
+GETFIELD:{GETFIELD} 'getfield' tag=U1 index=[ConstantFieldRef|HEX4];
+GETSTATIC:{GETSTATIC} 'getstatic' tag=U1 index=[ConstantFieldRef|HEX4];
+GOTO:{GOTO} 'goto' tag=U1 branch=[CodeTableEntry|HEX4];
+GOTO_W:{GOTO_W} 'goto_w' tag=U1 branch=[CodeTableEntry|HEX8];
+I2B:{I2B} 'i2b' tag=U1;
+I2C:{I2C} 'i2c' tag=U1;
+I2D:{I2D} 'i2d' tag=U1;
+I2F:{I2F} 'i2f' tag=U1;
+I2L:{I2L} 'i2l' tag=U1;
+I2S:{I2S} 'i2s' tag=U1;
+IADD:{IADD} 'iadd' tag=U1;
+IALOAD:{IALOAD} 'iaload' tag=U1;
+IAND:{IAND} 'iand' tag=U1;
+IASTORE:{IASTORE} 'iastore' tag=U1;
+ICONST_ML:{ICONST_ML} 'iconst_ml' tag=U1;
+ICONST_0:{ICONST_0} 'iconst_0' tag=U1;
+ICONST_1:{ICONST_1} 'iconst_1' tag=U1;
+ICONST_2:{ICONST_2} 'iconst_2' tag=U1;
+ICONST_3:{ICONST_3} 'iconst_3' tag=U1;
+ICONST_4:{ICONST_4} 'iconst_4' tag=U1;
+ICONST_5:{ICONST_5} 'iconst_5' tag=U1;
+IDIV:{IDIV} 'idiv' tag=U1;
+IF_ACMPEQ:{IF_ACMPEQ} 'if_acmpeq' tag=U1 branch=[CodeTableEntry|HEX4];
+IF_ACMPNE:{IF_ACMPNE} 'if_acmpne' tag=U1 branch=[CodeTableEntry|HEX4];
+IF_ICMPEQ:{IF_ICMPEQ} 'if_icmpeq' tag=U1 branch=[CodeTableEntry|HEX4];
+IF_ICMPNE:{IF_ICMPNE} 'if_icmpne' tag=U1 branch=[CodeTableEntry|HEX4];
+IF_ICMPLT:{IF_ICMPLT} 'if_icmplt' tag=U1 branch=[CodeTableEntry|HEX4];
+IF_ICMPGE:{IF_ICMPGE} 'if_icmpge' tag=U1 branch=[CodeTableEntry|HEX4];
+IF_ICMPGT:{IF_ICMPGT} 'if_icmpgt' tag=U1 branch=[CodeTableEntry|HEX4];
+IF_ICMPLE:{IF_ICMPLE} 'if_icmple' tag=U1 branch=[CodeTableEntry|HEX4];
+IFEQ:{IFEQ} 'ifeq' tag=U1 branch=[CodeTableEntry|HEX4];
+IFNE:{IFNE} 'ifne' tag=U1 branch=[CodeTableEntry|HEX4];
+IFLT:{IFLT} 'iflt' tag=U1 branch=[CodeTableEntry|HEX4];
+IFGE:{IFGE} 'ifge' tag=U1 branch=[CodeTableEntry|HEX4];
+IFGT:{IFGT} 'ifgt' tag=U1 branch=[CodeTableEntry|HEX4];
+IFLE:{IFLE} 'ifle' tag=U1 branch=[CodeTableEntry|HEX4];
+IFNONNULL:{IFNONNULL} 'ifnonnull' tag=U1 branch=[CodeTableEntry|HEX4];
+IFNULL:{IFNULL} 'ifnull' tag=U1 branch=[CodeTableEntry|HEX4];
+IINC:{IINC} 'iinc' tag=U1 index=U1 const=U1;
+ILOAD:{ILOAD} 'iload' tag=U1 index=U1;
+ILOAD_0:{ILOAD_0} 'iload_0' tag=U1;
+ILOAD_1:{ILOAD_1} 'iload_1' tag=U1;
+ILOAD_2:{ILOAD_2} 'iload_2' tag=U1;
+ILOAD_3:{ILOAD_3} 'iload_3' tag=U1;
+IMUL:{IMUL} 'imul' tag=U1;
+INEG:{INEG} 'ineg' tag=U1;
+INSTANCEOF:{INSTANCEOF} 'instanceof' tag=U1 index=[ConstantClass|HEX4];
+INVOKEDYNAMIC:{INVOKEDYNAMIC} 'invokedynamic' tag=U1 index=[ConstantPoolEntry|HEX4] a0=U1 a1=U1; // TODO make 'index' more specific
+INVOKEINTERFACE:{INVOKEINTERFACE} 'invokeinterface' tag=U1 index=[ConstantPoolEntry|HEX4] count=U1 a0=U1; // TODO make 'index' more specific
+INVOKESPECIAL:{INVOKESPECIAL} 'invokespecial' tag=U1 index=[ConstantPoolEntry|HEX4]; // TODO make 'index' more specific
+INVOKESTATIC:{INVOKESTATIC} 'invokestatic' tag=U1 index=[ConstantPoolEntry|HEX4]; // TODO make 'index' more specific
+INVOKEVIRTUAL:{INVOKEVIRTUAL} 'invokevirtual' tag=U1 index=[ConstantMethodRef|HEX4]; // TODO make 'index' more specific
+IOR:{IOR} 'ior' tag=U1;
+IREM:{IREM} 'irem' tag=U1;
+IRETURN:{IRETURN} 'ireturn' tag=U1;
+ISHL:{ISHL} 'ishl' tag=U1;
+ISHR:{ISHR} 'ishr' tag=U1;
+ISTORE:{ISTORE} 'istore' tag=U1 index=U1;
+ISTORE_0:{ISTORE_0} 'istore_0' tag=U1;
+ISTORE_1:{ISTORE_1} 'istore_1' tag=U1;
+ISTORE_2:{ISTORE_2} 'istore_2' tag=U1;
+ISTORE_3:{ISTORE_3} 'istore_3' tag=U1;
+ISUB:{ISUB} 'isub' tag=U1;
+IUSHR:{IUSHR} 'iushr' tag=U1;
+IXOR:{IXOR} 'ixor' tag=U1;
+JSR:{JSR} 'jsr' tag=U1 branch=[CodeTableEntry|HEX4];
+JSR_W:{JSR_W} 'jsr_w' tag=U1 branch=[CodeTableEntry|HEX8];
+L2D:{L2D} 'l2d' tag=U1;
+L2F:{L2F} 'l2f' tag=U1;
+L2I:{L2I} 'l2i' tag=U1;
+LADD:{LADD} 'ladd' tag=U1;
+LALOAD:{LALOAD} 'laload' tag=U1;
+LAND:{LAND} 'land' tag=U1;
+LASTORE:{LASTORE} 'lastore' tag=U1;
+LCMP:{LCMP} 'lcmp' tag=U1;
+LCONST_0:{LCONST_0} 'lconst_0' tag=U1;
+LCONST_1:{LCONST_1} 'lconst_1' tag=U1;
+LDC:{LDC} 'ldc' tag=U1 index=[ConstantPoolEntry|HEX2];
+LDC_W:{LDC_W} 'ldc_w' tag=U1 index=[ConstantPoolEntry|HEX4]; // TODO make 'index' more specific
+LDC2_W:{LDC2_W} 'ldc2_w' tag=U1 index=[ConstantPoolEntry|HEX4]; // TODO make 'index' more specific
+LDIV:{LDIV} 'ldiv' tag=U1;
+LLOAD:{LLOAD} 'lload' tag=U1 index=U1;
+LLOAD_0:{LLOAD_0} 'lload_0' tag=U1;
+LLOAD_1:{LLOAD_1} 'lload_1' tag=U1;
+LLOAD_2:{LLOAD_2} 'lload_2' tag=U1;
+LLOAD_3:{LLOAD_3} 'lload_3' tag=U1;
+LMUL:{LMUL} 'lmul' tag=U1;
+LNEG:{LNEG} 'lneg' tag=U1;
+LOOKUPSWITCH:{LOOKUPSWITCH} 'lookupswitch' tag=U1
+	(pad0=U1 (pad1=U1 pad2=U1?)?)? default=U4 npairs=U4 'matchOffsetPairs' '{' matchOffsetPairs+=MatchOffsetPair? (',' matchOffsetPairs+=MatchOffsetPair)* '}'
+;
+MatchOffsetPair:match=U4 offset=U4; // TODO implement references to opcodes ... need some refactoring
+LOR:{LOR} 'lor' tag=U1;
+LREM:{LREM} 'lrem' tag=U1;
+LRETURN:{LRETURN} 'lreturn' tag=U1;
+LSHL:{LSHL} 'lshl' tag=U1;
+LSHR:{LSHR} 'lshr' tag=U1;
+LSTORE:{LSTORE} 'lstore' tag=U1 index=U1;
+LSTORE_0:{LSTORE_0} 'lstore_0' tag=U1;
+LSTORE_1:{LSTORE_1} 'lstore_1' tag=U1;
+LSTORE_2:{LSTORE_2} 'lstore_2' tag=U1;
+LSTORE_3:{LSTORE_3} 'lstore_3' tag=U1;
+LSUB:{LSUB} 'lsub' tag=U1;
+LUSHR:{LUSHR} 'lushr' tag=U1;
+LXOR:{LXOR} 'lxor' tag=U1;
+MONITORENTER:{MONITORENTER} 'monitorenter' tag=U1;
+MONITOREXIT:{MONITOREXIT} 'monitorexit' tag=U1;
+MULTIANEWARRAY:{MULTIANEWARRAY} 'multianewarray' tag=U1 index=[ConstantClass|HEX4] dimensions=U1;
+NEW:{NEW} 'new' tag=U1 index=[ConstantClass|HEX4];
+NEWARRAY:{NEWARRAY} 'newarray' tag=U1 atype=U1; // TODO atype is an enum ...
+NOP:{NOP} 'nop' tag=U1;
+POP:{POP} 'pop' tag=U1;
+POP2:{POP2} 'pop2' tag=U1;
+PUTFIELD:{PUTFIELD} 'putfield' tag=U1 index=[ConstantFieldRef|HEX4];
+PUTSTATIC:{PUTSTATIC} 'putstatic' tag=U1 index=[ConstantFieldRef|HEX4];
+RET:{RET} 'ret' tag=U1 index=U1;
+RETURN:{RETURN} 'return' tag=U1;
+SALOAD:{SALOAD} 'saload' tag=U1;
+SASTORE:{SASTORE} 'sastore' tag=U1;
+SIPUSH:{SIPUSH} 'sipush' tag=U1 value=U2;
+SWAP:{SWAP} 'swap' tag=U1;
+TABLESWITCH:{TABLESWITCH} 'tableswitch' tag=U1
+	(pad0=U1 (pad1=U1 pad2=U1?)?)? default=U4 low=U4 high=U4 'jumpOffsets' '{' jumpOffsets+=JumpOffset* '}'
+;
+JumpOffset:offset=U4; // TODO implement references to opcodes ... need some refactoring
+WIDE:{WIDE} 'wide' tag=U1 opcode=U1 index=U2 const=U2?; // TODO opcode is an enum ...
+
+ExceptionTable:
+	{ExceptionTable} 'ExceptionTable' '{' exceptionTableEntry+=ExceptionTableEntry* '}';
+
+ExceptionTableEntry:
+	'entry' startPc=[CodeTableEntry|HEX4] endPc=[CodeTableEntry|HEX4] handlerPc=[CodeTableEntry|HEX4] catchType=[ConstantClass|HEX4];
+
+SourceFile:
+	'sourceFile' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 sourceFileIndex=[ConstantUtf8|HEX4];
+
+LineNumberTable:
+	'lineNumberTable' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 lineNumberTableLength=U2 "Table" "{" lineNumbers+=LineNumber* "}";
+LineNumber: "lineNumber" startPc=[CodeTableEntry|HEX4] lineNumber=U2;
+
+LocalVariableTable:
+	'localVariableTable' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 localVariableTableLength=U2 "Table" "{" localVariables+=LocalVariable* "}";
+LocalVariable: "localVariable" startPc=[CodeTableEntry|HEX4] length=U2 nameIndex=[ConstantUtf8|HEX4] descriptorIndex=[ConstantUtf8|HEX4] index=U2;
+
+Exceptions:
+	'exceptions' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 numberOfExceptions=U2 "Table" "{" exception+=Exception* "}";
+Exception: 'exception' index=[ConstantClass|HEX4];
+
+InnerClasses:
+	'innerClasses' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 numberOfClasses=U2 "Table" "{" innerClasses+=InnerClass* "}";
+InnerClass: 'innerClass' innerClassInfoIndex=[ConstantClass|HEX4] outerClassInfoIndex=[ConstantClass|HEX4] innerNameIndex=[ConstantUtf8|HEX4] innerClassAccessFlags=U2;
+
+U1:
+	value=HEX2;
+
+U2:
+	value=HEX4;
+
+U4:
+	value=HEX8;
+	
+UString:
+	value=STRING;
+
+terminal HEX2:
+	HEX HEX;
+
+terminal HEX4:
+	HEX HEX HEX HEX;
+
+terminal HEX8:
+	HEX HEX HEX HEX HEX HEX HEX HEX;
+
+terminal fragment HEX:
+	('a'..'f' | 'A'..'F' | '0'..'9');
+
+// TODO check about quoting "
+@Override
+terminal STRING:
+	'"' ('\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\' | '"'))* '"';
