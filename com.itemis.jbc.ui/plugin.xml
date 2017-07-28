@@ -6,7 +6,7 @@
 		<editor
         class="com.itemis.jbc.ui.JBCExecutableExtensionFactory:com.itemis.jbc.ui.custom.JBCEditor"
         contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
-        default="true"
+        default="false"
         extensions="jbc,class"
         id="com.itemis.jbc.JBC"
         name="JBC Editor">
