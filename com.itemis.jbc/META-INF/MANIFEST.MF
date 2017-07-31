@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.xtext,
  org.antlr.runtime,
  org.eclipse.xtext.util,
  org.eclipse.xtend.lib,
- org.eclipse.emf.common
+ org.eclipse.emf.common,
+ org.apache.commons.lang3
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.itemis.jbc,
  com.itemis.jbc.binary,
@@ -27,5 +28,4 @@ Export-Package: com.itemis.jbc,
  com.itemis.jbc.serializer,
  com.itemis.jbc.services,
  com.itemis.jbc.validation
-Import-Package: org.apache.commons.lang3;version="3.1.0",
- org.apache.log4j
+Import-Package: org.apache.log4j

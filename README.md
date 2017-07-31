@@ -1,5 +1,7 @@
 # JBC
 
+[![Build Status](https://travis-ci.org/itemis/jbc.svg?branch=master)](https://travis-ci.org/itemis/jbc)
+
 JBC is an eclipse plugin that enables the developer to view and edit files containing java byte code (*.class) inside eclipse.
 This is done in a way such that a specialized editor opens the .class file and displays the binary code as a textual DSL whereas keywords intersparse the byte sequences.
 Changing the text and saving then writes back the bytes to the .class file.
