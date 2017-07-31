@@ -1,6 +1,5 @@
 package com.itemis.jbc.ui.custom
 
-import com.google.inject.Inject
 import java.io.InputStreamReader
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
@@ -10,14 +9,10 @@ import org.eclipse.core.resources.IStorage
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.ui.IEditorInput
 import org.eclipse.ui.IFileEditorInput
-import org.eclipse.xtext.parser.IParser
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.util.StringInputStream
 
 class JBCEditor extends XtextEditor {
-
-	@Inject
-	private IParser parser
 
 	override protected doSetInput(IEditorInput input) throws CoreException {
 		// The class LastSaveReferenceProvider uses the method IStorage.getContents to access the original content
@@ -35,7 +30,7 @@ class JBCEditor extends XtextEditor {
 
 	def private IFileEditorInput proxy(IFileEditorInput editorInput) {
 		Proxy.newProxyInstance(this.class.classLoader, #[IFileEditorInput],
-			new IFileEditorInputHandler(editorInput, parser)) as IFileEditorInput
+			new IFileEditorInputHandler(editorInput)) as IFileEditorInput
 	}
 
 }
@@ -43,11 +38,9 @@ class JBCEditor extends XtextEditor {
 package class IFileEditorInputHandler implements InvocationHandler {
 
 	private final IFileEditorInput original
-	private final IParser parser
 
-	new(IFileEditorInput original, IParser parser) {
+	new(IFileEditorInput original) {
 		this.original = original
-		this.parser = parser
 	}
 
 	override invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -59,7 +52,7 @@ package class IFileEditorInputHandler implements InvocationHandler {
 	}
 
 	def private IStorage proxy(IStorage storage) {
-		Proxy.newProxyInstance(this.class.classLoader, #[IStorage], new IStorageHandler(storage, parser)) as IStorage
+		Proxy.newProxyInstance(this.class.classLoader, #[IStorage], new IStorageHandler(storage)) as IStorage
 	}
 
 }
@@ -67,11 +60,9 @@ package class IFileEditorInputHandler implements InvocationHandler {
 package class IStorageHandler implements InvocationHandler {
 
 	private final IStorage original
-	private final IParser parser
 
-	new(IStorage original, IParser parser) {
+	new(IStorage original) {
 		this.original = original
-		this.parser = parser
 	}
 
 	override invoke(Object proxy, Method method, Object[] args) throws Throwable {
