@@ -3,7 +3,6 @@ jdk: oraclejdk8
 notifications:
   email: false
 before_install: 
- - sudo rm /etc/mavenrc
  - export M2_HOME=/usr/local/maven
  - export MAVEN_OPTS="-Dmaven.repo.local=$HOME/.m2/repository -Xms512m -Xmx2048m -XX:PermSize=512m"
 before_script:
