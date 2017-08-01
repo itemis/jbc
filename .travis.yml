@@ -1,6 +1,6 @@
 language: java
 jdk: oraclejdk8
 before_script:
- - "echo $JAVA_OPTS"
- - "export JAVA_OPTS=-Xmx256m"
- script: mvn clean verify -B -f pom.xml
+ - echo $JAVA_OPTS
+ - export JAVA_OPTS=-Xmx256m
+script: mvn clean verify -B -f pom.xml
