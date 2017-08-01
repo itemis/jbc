@@ -1,3 +1,6 @@
 language: java
 jdk: oraclejdk8
-script: travis_wait mvn clean verify -B -f pom.xml
+before_script:
+ - "echo $JAVA_OPTS"
+ - "export JAVA_OPTS=-Xmx256m"
+ script: mvn clean verify -B -f pom.xml
