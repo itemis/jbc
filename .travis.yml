@@ -2,7 +2,11 @@ language: java
 jdk: oraclejdk8
 notifications:
   email: false
+before_install: 
+ - sudo rm /etc/mavenrc
+ - export M2_HOME=/usr/local/maven
+ - export MAVEN_OPTS="-Dmaven.repo.local=$HOME/.m2/repository -Xms512m -Xmx2048m -XX:PermSize=512m"
 before_script:
  - echo $JAVA_OPTS
- - export JAVA_OPTS=-Xmx256m
+ - export JAVA_OPTS=-Xmx512m
 script: mvn clean verify -B -f pom.xml
