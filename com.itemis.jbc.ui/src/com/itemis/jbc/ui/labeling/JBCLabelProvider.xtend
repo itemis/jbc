@@ -167,7 +167,7 @@ class JBCLabelProvider extends AbstractLabelProvider implements IStyledLabelProv
 			result.add("annotation ", KEYWORD_STYLER)
 		result.add(classFile?.thisClass?.nameIndex?.content?.value).add(" extends ", KEYWORD_STYLER).add(
 			classFile?.superClass?.nameIndex?.content?.value)
-		if (classFile?.interfaces.interfaceInfo.size > 0) {
+		if (classFile?.interfaces?.interfaceInfo?.size > 0) {
 			result.add(" implements ", KEYWORD_STYLER)
 			var seperator = ""
 			for (i : classFile?.interfaces.interfaceInfo) {
@@ -175,7 +175,7 @@ class JBCLabelProvider extends AbstractLabelProvider implements IStyledLabelProv
 				seperator = ", "
 			}
 		}
-		result.add(" (" + classFile.majorVersion.intValue + "." + classFile.minorVersion.intValue + ")",
+		result.add(" (" + classFile?.majorVersion?.intValue + "." + classFile.minorVersion?.intValue + ")",
 			GREY_DARK_STYLER)
 		return result
 	}
