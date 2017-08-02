@@ -5,7 +5,7 @@
       version="1.0.0"
       provider-name="itemis AG">
 
-   <description url="https://www.itemis.com/jbc/update">
+   <description url="http://download.itemis.com/jbc/update">
       A byte code editor for java .class files. Supports reading and
 writing .class files while supporting a rich textual DSL for
 manipulation.
