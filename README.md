@@ -6,6 +6,16 @@ JBC is an eclipse plugin that enables the developer to view and edit files conta
 This is done in a way such that a specialized editor opens the .class file and displays the binary code as a textual DSL whereas keywords intersparse the byte sequences.
 Changing the text and saving then writes back the bytes to the .class file.
 
+## Installation
+
+To install the editor you have to add the following update site to eclipse:
+
+http://download.itemis.com/jbc/updates/
+
+You can do so by going through the main menu under "Help->Install New Software...", click an "Add..." and insert the URL in the dialog. You can then install the feature "JBC / JBC Feature".
+
+## Usage
+
 To support the developer the outline displays and interpretation of the byte code with resolved references.
 There is validation and quick fixes for table sizes as well as quick navigation (F3) to referenced elements, autocompletion, hover information and some more.
 
