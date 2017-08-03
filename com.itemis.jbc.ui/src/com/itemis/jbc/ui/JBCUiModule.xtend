@@ -5,13 +5,15 @@ package com.itemis.jbc.ui
 
 import com.itemis.jbc.ui.commands.CreateClassFromJBCHandler
 import com.itemis.jbc.ui.custom.JBCDocumentProvider
-import com.itemis.jbc.ui.custom.JBCHighlightingConfiguration
 import com.itemis.jbc.ui.custom.JBCResourceServiceProvider
 import com.itemis.jbc.ui.custom.JBCTokenToAttributeIdMapper
+import com.itemis.jbc.ui.highlight.JBCHighlightingConfiguration
+import com.itemis.jbc.ui.highlight.JBCSemanticHighlightingCalculator
 import com.itemis.jbc.ui.hover.JBCHoverProvider
 import com.itemis.jbc.ui.outline.JBCDocumentationProvider
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
+import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator
 import org.eclipse.xtext.resource.IResourceServiceProvider
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
@@ -39,5 +41,9 @@ class JBCUiModule extends AbstractJBCUiModule {
 	def Class<? extends IEObjectDocumentationProvider> bindIEObjectDocumentationProvider() { JBCDocumentationProvider }
 
 	def Class<? extends IResourceServiceProvider> bindIResourceServiceProvider() { JBCResourceServiceProvider }
+
+	def Class<? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator() {
+		JBCSemanticHighlightingCalculator
+	}
 
 }
