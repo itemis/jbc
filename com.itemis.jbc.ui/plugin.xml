@@ -10,9 +10,6 @@
         extensions="jbc,class"
         id="com.itemis.jbc.JBC"
         name="JBC Editor">
-     <contentTypeBinding
-           contentTypeId="org.eclipse.jdt.core.javaClass">
-     </contentTypeBinding>
 		</editor>
 	</extension>
 	<extension
