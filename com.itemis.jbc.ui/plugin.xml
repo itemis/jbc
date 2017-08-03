@@ -433,55 +433,7 @@
        point="org.eclipse.ui.menus">
     <menuContribution
           allPopups="false"
-          locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?before=additions">
-       <command
-             commandId="com.itemis.jbc.ui.commands.CreateJBCFromClassCommand"
-             label="Create .jbc"
-             style="push"
-             tooltip="Create a .jbc file out of the selected .class file">
-          <visibleWhen
-                checkEnabled="false">
-             <with
-                   variable="selection">
-                <iterate
-                      ifEmpty="false"
-                      operator="and">
-                   <adapt
-                         type="org.eclipse.core.resources.IFile">
-                      <test
-                            forcePluginActivation="true"
-                            property="org.eclipse.core.resources.name"
-                            value="*.class">
-                      </test>
-                   </adapt>
-                </iterate>
-             </with>
-          </visibleWhen>
-       </command>
-       <command
-             commandId="com.itemis.jbc.ui.commands.CreateClassFromJBCCommand"
-             label="Create .class"
-             style="push"
-             tooltip="Create a .class file out of the selected .jbc file">
-          <visibleWhen
-                checkEnabled="false">
-             <with
-                   variable="selection">
-                <iterate
-                      ifEmpty="false"
-                      operator="and">
-                   <adapt
-                         type="org.eclipse.core.resources.IFile">
-                      <test
-                            forcePluginActivation="true"
-                            property="org.eclipse.core.resources.name"
-                            value="*.jbc">
-                      </test>
-                   </adapt>
-                </iterate>
-             </with>
-          </visibleWhen>
-       </command>
+          locationURI="popup:org.eclipse.ui.popup.any?endof=group.open">
        <command
              commandId="com.itemis.jbc.ui.commands.OpenJBCFromJavaCommand"
              label="Open JBC"
@@ -504,7 +456,7 @@
     </menuContribution>
     <menuContribution
           allPopups="false"
-          locationURI="popup:org.eclipse.jdt.ui.PackageExplorer?before=additions">
+          locationURI="popup:org.eclipse.ui.popup.any?endof=group.edit">
        <command
              commandId="com.itemis.jbc.ui.commands.CreateJBCFromClassCommand"
              label="Create .jbc"
@@ -548,25 +500,6 @@
                             property="org.eclipse.core.resources.name"
                             value="*.jbc">
                       </test>
-                   </adapt>
-                </iterate>
-             </with>
-          </visibleWhen>
-       </command>
-       <command
-             commandId="com.itemis.jbc.ui.commands.OpenJBCFromJavaCommand"
-             label="Open JBC"
-             style="push"
-             tooltip="Open the .class file created from selected .java file in JBC editor.">
-          <visibleWhen
-                checkEnabled="false">
-             <with
-                   variable="selection">
-                <iterate
-                      ifEmpty="false"
-                      operator="and">
-                   <adapt
-                         type="org.eclipse.jdt.core.ICompilationUnit">
                    </adapt>
                 </iterate>
              </with>
