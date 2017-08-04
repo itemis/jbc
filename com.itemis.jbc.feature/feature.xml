@@ -2,7 +2,7 @@
 <feature
       id="com.itemis.jbc.feature"
       label="JBC Feature "
-      version="1.1.0"
+      version="1.2.0.qualifier"
       provider-name="itemis AG">
 
    <description url="http://download.itemis.com/jbc/update">
