@@ -31,4 +31,4 @@ It is also possible to open a .class file directly from the Project or Package E
 
 ## External Links
 
-- Introductional article: https://blogs.itemis.com/de/41-cafebabe-java-bytecode-in-eclipse (german)
+- Introductional article: [4+1 = CAFEBABE: Java Bytecode in Eclipse](https://blogs.itemis.com/de/41-cafebabe-java-bytecode-in-eclipse) (german)
