@@ -260,6 +260,8 @@ class ByteCodeReader {
 			return readExceptionsAttribute(attributeNameIndex, attributeLength)
 		} else if ("InnerClasses".equals(attributeNameIndex.getStringValue())) {
 			return readInnerClassesAttribute(attributeNameIndex, attributeLength)
+		} else if ("EnclosingMethod".equals(attributeNameIndex.getStringValue())) {
+			return readEnclosingMethodAttribute(attributeNameIndex, attributeLength)
 		}
 		return readUnknownAttribute(attributeNameIndex, attributeLength)
 	}
@@ -433,6 +435,15 @@ class ByteCodeReader {
 		return result
 	}
 
+	private def readEnclosingMethodAttribute(ConstantUtf8 attributeNameIndex, U4 attributeLength) {
+		val result = JbcFactory.eINSTANCE.createEnclosingMethod
+		result.attributeNameIndex = attributeNameIndex
+		result.attributeLength = attributeLength
+		result.classIndex = readConstantClassRef
+		result.methodIndex = readConstantNameAndTypeRef
+		return result
+	}
+
 	package def readConstantPoolEntryRef() {
 		classFile.constantPool.getConstant(stream.readUnsignedShort)
 	}
@@ -455,6 +466,10 @@ class ByteCodeReader {
 
 	package def readConstantMethodRef() {
 		classFile.constantPool.getConstantMethodRef(stream.readUnsignedShort)
+	}
+
+	package def readConstantNameAndTypeRef() {
+		classFile.constantPool.getConstantNameAndType(stream.readUnsignedShort)
 	}
 
 	package def readCodeTableEntryRef() {

@@ -420,6 +420,14 @@ class JBCCodeTemplatesTest {
 			}
 		'''.toString, code(attributes(attributeLineNumberTable(null, u4(2), u2(0)))))
 	}
+	
+	@Test def attributeEnclosingMethod() {
+		assertEquals('''
+			Attributes {
+				enclosingMethod 0000 0000000A 0000 0000
+			}
+			'''.toString, code(attributes(attributeEnclosingMethod(null, u4(10), null, null))))
+	}
 
 	private def assertUnchanged(CharSequence input) {
 		assertEquals(input.toString, parse(input).code.toString)

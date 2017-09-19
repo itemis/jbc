@@ -345,6 +345,30 @@ class JBCParsingTest {
 			}
 		''').assertNoErrors
 	}
+	
+	
+	@Test
+	def void classFileWithEnclosingMethodAttribute() {
+		parse('''
+			ClassFile {
+				CAFEBABE 0001 0002 0004 ConstantPool {
+					utf8 01 ""
+					class 07 0001
+					nameAndType 0C 0001 0001
+				}
+				0001 0002 0002 0000 Interfaces {
+				}
+				0000 Fields {
+				}
+				0000 Methods {
+				}
+				0001 Attributes {
+					enclosingMethod 0001 00000004 0002 0003
+				}
+			}
+		''').assertNoErrors
+	}
+	
 
 	@Test
 	def void codeGotoOntoItself() {
