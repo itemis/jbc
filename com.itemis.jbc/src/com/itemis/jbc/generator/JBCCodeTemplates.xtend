@@ -239,6 +239,7 @@ import org.apache.commons.lang3.StringEscapeUtils
 import org.eclipse.emf.common.util.EList
 
 import static extension com.itemis.jbc.binary.ClassFileAccessAPI.*
+import com.itemis.jbc.jbc.EnclosingMethod
 
 class JBCCodeTemplates {
 
@@ -422,6 +423,10 @@ class JBCCodeTemplates {
 				innerClass «innerClass.innerClassInfoIndex.index.u2Value» «innerClass.outerClassInfoIndex.index.u2Value» «innerClass.innerNameIndex.index.u2Value» «innerClass.innerClassAccessFlags.value»
 			«ENDFOR»
 		}'''
+	}
+	
+	def dispatch static String attributeCode(EnclosingMethod attribute) {
+		'''enclosingMethod «attribute.attributeNameIndex.index.u2Value» «attribute.attributeLength.value» «attribute.classIndex.index.u2Value» «attribute.methodIndex.index.u2Value»'''
 	}
 
 	private def static String code(CodeTable codeTable) {

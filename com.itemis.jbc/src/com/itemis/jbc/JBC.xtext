@@ -105,7 +105,8 @@ AttributeInfo:
 	| LineNumberTable
 	| LocalVariableTable
 	| Exceptions
-	| InnerClasses;
+	| InnerClasses
+	| EnclosingMethod;
 
 Unknown:
 	'unknown' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 'Info' '{' info+=U1* '}';
@@ -374,6 +375,9 @@ Exception: 'exception' index=[ConstantClass|HEX4];
 InnerClasses:
 	'innerClasses' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 numberOfClasses=U2 "Table" "{" innerClasses+=InnerClass* "}";
 InnerClass: 'innerClass' innerClassInfoIndex=[ConstantClass|HEX4] outerClassInfoIndex=[ConstantClass|HEX4] innerNameIndex=[ConstantUtf8|HEX4] innerClassAccessFlags=U2;
+
+EnclosingMethod:
+	'enclosingMethod' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 classIndex=[ConstantClass|HEX4] methodIndex=[ConstantNameAndType|HEX4]; //TODO methodIndex could be 0000, should cause no error
 
 U1:
 	value=HEX2;

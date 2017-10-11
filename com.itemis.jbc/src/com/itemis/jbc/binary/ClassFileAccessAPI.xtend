@@ -38,6 +38,7 @@ import com.itemis.jbc.jbc.impl.CodeTableEntryImplCustom
 import com.itemis.jbc.jbc.impl.ConstantPoolEntryImplCustom
 import java.nio.ByteBuffer
 import org.eclipse.emf.ecore.EObject
+import com.itemis.jbc.jbc.EnclosingMethod
 
 class ClassFileAccessAPI {
 
@@ -386,6 +387,8 @@ class ClassFileAccessAPI {
 				return 2 + attribute.exception.length * 2
 			InnerClasses:
 				return 2 + attribute.innerClasses.length * 8
+			EnclosingMethod:
+				return 4
 			Unknown:
 				return attribute.info.length
 		}

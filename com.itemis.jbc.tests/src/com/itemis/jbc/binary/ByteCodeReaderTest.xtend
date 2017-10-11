@@ -490,6 +490,45 @@ class ByteCodeReaderTest {
 				constantPool(utf8 = constantUtf8(u1(1), uString("SourceFile"))), u2(2), null, null, u2(0), interfaces(),
 				u2(0), fields(), u2(0), methods(), u2(1), attributes(attributeSourceFile(utf8, u4(2), utf8))))
 	}
+	
+	@Test def classFileWithEnclosingMethodAttribute() {
+		var ConstantUtf8 extendedClassUtf8	
+		var ConstantUtf8 enclosingClassUtf8
+		var ConstantUtf8 thisClassUtf8
+		var ConstantUtf8 enclosingMethod
+		var ConstantClass extendedClass
+		var ConstantClass enclosingClass
+		var ConstantClass thisClass
+		assertTreeMatches(readClassFile('''
+			cafebabe 0000 0034
+			0008
+				01 000a 44 75 6d 6d 79 43 6c 61 73 73
+				01 000a 48 65 6c 6c 6f 57 6f 72 6c 64
+				01 0010 48 65 6c 6c 6f 57 6f 72 6c 64 24 31 54 65 73 74
+				01 000f 45 6e 63 6c 6f 73 69 6e 67 4d 65 74 68 6f 64
+				07 0001
+				07 0002
+				07 0003
+			0020 0007 0005 0000 
+			0000
+			0000
+			0001
+				0004 00000004 0006 0000
+		'''),
+			classFile(u4(-889275714), u2(0), u2(52), u2(8),
+				constantPool(
+					extendedClassUtf8 = constantUtf8(u1(1), uString("DummyClass")),
+					enclosingClassUtf8 = constantUtf8(u1(1), uString("HelloWorld")),
+					thisClassUtf8 = constantUtf8(u1(1), uString("HelloWorld$1Test")),
+					enclosingMethod = constantUtf8(u1(1), uString("EnclosingMethod")),
+					extendedClass = constantClass(u1(7), enclosingClassUtf8),
+					enclosingClass = constantClass(u1(7), extendedClassUtf8),
+					thisClass = constantClass(u1(7), thisClassUtf8)
+				), u2(32), thisClass, extendedClass, u2(0), interfaces(),
+				u2(0), fields(), u2(0), methods(), u2(1), attributes(
+					attributeEnclosingMethod(enclosingMethod, u4(4), enclosingClass, null)
+				)))
+	}
 
 	@Test def codeLDC() {
 		var ConstantUtf8 utf8

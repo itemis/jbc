@@ -28,3 +28,8 @@ One can open the .class file for a java file from the Project or Package Explore
 It is also possible to open a .class file directly from the Project or Package Explorer by opening it with the "JBC Editor". It is not necessary that the class file is inside a java project, it just needs to be in the workspace. You can, for example, extract some jar, modify the included .class files and write them back to the jar. This way you can modify existing jars without having the source available.
 
 ![Open .class directly](com.itemis.jbc.website/screenshots/OpenFromClass.png)
+
+## External Links
+
+- Introductional article: [4+1 = CAFEBABE: Java Bytecode in Eclipse](https://blogs.itemis.com/de/41-cafebabe-java-bytecode-in-eclipse) (german)
+- Some technical background: [Xtext-Editor für binäre Dateien](https://blogs.itemis.com/de/xtext-editor-fuer-binaere-dateien) (german)

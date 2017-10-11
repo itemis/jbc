@@ -256,6 +256,16 @@ class ClassFileFactoryAPI {
 		result.attributes = attributes
 		return result
 	}
+	
+	static def attributeEnclosingMethod(ConstantUtf8 attributeNameIndex, U4 attributeLength, ConstantClass classIndex,
+		ConstantNameAndType methodIndex) {
+		val result = JbcFactory.eINSTANCE.createEnclosingMethod
+		result.attributeNameIndex = attributeNameIndex
+		result.attributeLength = attributeLength
+		result.classIndex = classIndex
+		result.methodIndex = methodIndex
+		return result
+	}
 
 	static def exceptionTable(ExceptionTableEntry... exceptionTableEntry) {
 		val result = JbcFactory.eINSTANCE.createExceptionTable
