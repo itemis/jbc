@@ -15,6 +15,7 @@ import com.itemis.jbc.jbc.ConstantLong
 import com.itemis.jbc.jbc.ConstantMethodHandle
 import com.itemis.jbc.jbc.ConstantMethodRef
 import com.itemis.jbc.jbc.ConstantMethodType
+import com.itemis.jbc.jbc.ConstantModule
 import com.itemis.jbc.jbc.ConstantNameAndType
 import com.itemis.jbc.jbc.ConstantPool
 import com.itemis.jbc.jbc.ConstantPoolEntry
@@ -51,6 +52,7 @@ import java.util.Map
 import static com.itemis.jbc.binary.ClassFileFactoryAPI.*
 
 import static extension com.itemis.jbc.binary.ClassFileAccessAPI.*
+import com.itemis.jbc.jbc.ConstantPackage
 
 class ByteCodeReader {
 
@@ -136,6 +138,10 @@ class ByteCodeReader {
 				case ConstantInvoceDynamic:
 					map.put(constant = constantInvoceDynamic(tag, readU2, null),
 						Pair.of(stream.readUnsignedShort, null))
+				case ConstantModule:
+					map.put(constant = constantModule(tag, null), Pair.of(stream.readUnsignedShort, null))
+				case ConstantPackage:
+					map.put(constant = constantPackage(tag, null), Pair.of(stream.readUnsignedShort, null))
 				default:
 					throw new RuntimeException("Unknown tag: " + tag)
 			}
@@ -175,6 +181,10 @@ class ByteCodeReader {
 					entry.descriptorIndex = pool.getConstantUtf8(e.value.key)
 				ConstantInvoceDynamic:
 					entry.nameAndTypeIndex = pool.getConstantNameAndType(e.value.key)
+				ConstantModule:
+					entry.nameIndex = pool.getConstantUtf8(e.value.key)
+				ConstantPackage:
+					entry.nameIndex = pool.getConstantUtf8(e.value.key)
 			}
 		}
 	}
@@ -192,7 +202,7 @@ class ByteCodeReader {
 			result.interfaceInfo.add(readInterface)
 		return result
 	}
-	
+
 	private def readInterface() {
 		val result = JbcFactory.eINSTANCE.createInterface
 		result.info = readConstantClassRef

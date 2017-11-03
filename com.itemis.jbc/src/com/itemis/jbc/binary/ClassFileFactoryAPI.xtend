@@ -170,6 +170,20 @@ class ClassFileFactoryAPI {
 		return result
 	}
 
+	static def constantModule(U1 tag, ConstantUtf8 nameIndex) {
+		val result = JbcFactory.eINSTANCE.createConstantModule
+		result.tag = tag
+		result.nameIndex = nameIndex
+		return result
+	}
+
+	static def constantPackage(U1 tag, ConstantUtf8 nameIndex) {
+		val result = JbcFactory.eINSTANCE.createConstantPackage
+		result.tag = tag
+		result.nameIndex = nameIndex
+		return result
+	}
+
 	static def interfaces(Interface... interfaceInfo) {
 		val result = JbcFactory.eINSTANCE.createInterfaces
 		result.interfaceInfo.addAll(interfaceInfo)

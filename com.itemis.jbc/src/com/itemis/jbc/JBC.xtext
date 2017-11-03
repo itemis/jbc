@@ -30,7 +30,9 @@ ConstantPoolEntry:
 	| ConstantUtf8
 	| ConstantMethodHandle
 	| ConstantMethodType
-	| ConstantInvoceDynamic;
+	| ConstantInvoceDynamic
+	| ConstantModule
+	| ConstantPackage;
 
 ConstantClass:
 	'class' tag=U1 nameIndex=[ConstantUtf8|HEX4];
@@ -70,11 +72,17 @@ ConstantMethodHandle:
 	'methodHandle' tag=U1 referenceKind=U1 referenceIndex=[ConstantPoolEntry|HEX4];
 
 ConstantMethodType:
-	'methodType' tag=U1 descriptorIndex=[ConstantUtf8|HEX4] ;
+	'methodType' tag=U1 descriptorIndex=[ConstantUtf8|HEX4];
 
 // TODO implement reference for 'bootstrapMethodAttrIndex' ... something into the bootstrap method table
 ConstantInvoceDynamic:
-	'invoceDynamic' tag=U1 bootstrapMethodAttrIndex=U2  nameAndTypeIndex=[ConstantNameAndType|HEX4] ;
+	'invoceDynamic' tag=U1 bootstrapMethodAttrIndex=U2  nameAndTypeIndex=[ConstantNameAndType|HEX4];
+
+ConstantModule:
+	'module' tag=U1 nameIndex=[ConstantUtf8|HEX4];
+
+ConstantPackage:
+	'package' tag=U1 nameIndex=[ConstantUtf8|HEX4];
 
 Interfaces:
 	{Interfaces} 'Interfaces' '{' interfaceInfo+=Interface* '}';

@@ -38,7 +38,7 @@ class ByteCodeWriterTest {
 		var ConstantClass class
 		var ConstantNameAndType nameAndType
 		assertUnchangedAfterWriteRead(
-			classFile(u4(-889275714), u2(0), u2(52), u2(17),
+			classFile(u4(-889275714), u2(0), u2(52), u2(19),
 				constantPool(utf8 = constantUtf8(u1(1), uString("ab")), constantInteger(u1(3), u4(4)),
 					constantFloat(u1(4), u4(5)), constantLong(u1(5), u4(1), u4(2)), constantDouble(u1(6), u4(1), u4(2)),
 					class = constantClass(u1(7), utf8), constantString(u1(8), utf8),
@@ -46,8 +46,9 @@ class ByteCodeWriterTest {
 					constantMethodRef(u1(10), class, nameAndType),
 					constantInterfaceMethodRef(u1(11), class, nameAndType),
 					constantMethodHandle(u1(15), u1(1), nameAndType), constantMethodType(u1(16), utf8),
-					constantInvoceDynamic(u1(18), u2(1), nameAndType)), u2(2), class, class, u2(0), interfaces(), u2(0),
-				fields(), u2(0), methods(), u2(0), attributes()))
+					constantInvoceDynamic(u1(18), u2(1), nameAndType), constantModule(u1(19), utf8),
+					constantPackage(u1(20), utf8)), u2(2), class, class, u2(0), interfaces(), u2(0), fields(), u2(0),
+				methods(), u2(0), attributes()))
 	}
 
 	@Test def classFileWithInterfaces() {

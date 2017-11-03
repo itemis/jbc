@@ -240,6 +240,8 @@ import org.eclipse.emf.common.util.EList
 
 import static extension com.itemis.jbc.binary.ClassFileAccessAPI.*
 import com.itemis.jbc.jbc.EnclosingMethod
+import com.itemis.jbc.jbc.ConstantModule
+import com.itemis.jbc.jbc.ConstantPackage
 
 class JBCCodeTemplates {
 
@@ -319,6 +321,14 @@ class JBCCodeTemplates {
 
 	def dispatch static String constantCode(ConstantInvoceDynamic constant) {
 		'''invoceDynamic «constant.tag.value» «constant.bootstrapMethodAttrIndex.value» «constant.nameAndTypeIndex?.index.u2Value»'''
+	}
+
+	def dispatch static String constantCode(ConstantModule constant) {
+		'''module «constant.tag.value» «constant.nameIndex?.index.u2Value»'''
+	}
+
+	def dispatch static String constantCode(ConstantPackage constant) {
+		'''package «constant.tag.value» «constant.nameIndex?.index.u2Value»'''
 	}
 
 	def static String code(Interfaces interfaces) {

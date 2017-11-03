@@ -22,7 +22,7 @@ import static org.junit.Assert.*
 @InjectWith(JBCInjectorProvider)
 class RoundtripTest {
 
-	@Inject	ParseHelper<ClassFile> parseClass
+	@Inject ParseHelper<ClassFile> parseClass
 	@Inject ValidationTestHelper validation
 
 	@Test def mostSimpleClass() { MostSimpleClass.assertRoundTrip }
@@ -49,14 +49,22 @@ class RoundtripTest {
 
 	@Test def scalaClass0() { assertRoundTrip("ConsoleLogger.class", loadByteCode("ConsoleLogger.cls", RoundtripTest)) }
 
-	@Test def scalaClass1() { assertRoundTrip("ConsoleLogger$class.class", loadByteCode("ConsoleLogger$class.cls", RoundtripTest)) }
+	@Test def scalaClass1() {
+		assertRoundTrip("ConsoleLogger$class.class", loadByteCode("ConsoleLogger$class.cls", RoundtripTest))
+	}
 
 	@Ignore @Test def internalJBCParserClass() { InternalJBCParser.assertRoundTrip }
+
+	@Test def moduleClass() { assertRoundTrip("module-info.cls", loadByteCode("module-info.cls", RoundtripTest)) }
+
+	@Test def moduleClassWithPackage() {
+		assertRoundTrip("module-info2.cls", loadByteCode("module-info2.cls", RoundtripTest))
+	}
 
 	private def void assertRoundTrip(Class<?> c) {
 		assertRoundTrip(c.name, loadByteCode(c))
 	}
-	
+
 	private def void assertRoundTrip(String name, byte[] loadedByteCode) {
 //		println(Arrays.toString(loadedByteCode))
 		val loadedClassFile = loadClassFile(loadedByteCode)
@@ -80,7 +88,7 @@ class RoundtripTest {
 		val simpleName = c.simpleName + ".class"
 		return loadByteCode(simpleName, c)
 	}
-	
+
 	private def byte[] loadByteCode(String simpleName, Class<?> c) {
 		val result = newArrayList
 		val stream = c.getResourceAsStream(simpleName)

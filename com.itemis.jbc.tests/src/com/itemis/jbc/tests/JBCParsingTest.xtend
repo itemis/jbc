@@ -69,6 +69,8 @@ class JBCParsingTest {
 					methodHandle 0F 01 000A
 					methodType 10 0001
 					invoceDynamic 12 0001 000A
+					module 13 0001
+					package 14 0001
 				}
 				0001 0008 0008 0000 Interfaces {
 				}
@@ -88,8 +90,9 @@ class JBCParsingTest {
 					constantMethodRef(u1(10), class, nameAndType),
 					constantInterfaceMethodRef(u1(11), class, nameAndType),
 					constantMethodHandle(u1(15), u1(1), nameAndType), constantMethodType(u1(16), utf8),
-					constantInvoceDynamic(u1(18), u2(1), nameAndType)), u2(1), class, class, u2(0), interfaces(), u2(0),
-				fields(), u2(0), methods(), u2(0), attributes()))
+					constantInvoceDynamic(u1(18), u2(1), nameAndType), constantModule(u1(19), utf8),
+					constantPackage(u1(20), utf8)), u2(1), class, class, u2(0), interfaces(), u2(0), fields(), u2(0),
+				methods(), u2(0), attributes()))
 	}
 
 	@Test
@@ -345,8 +348,7 @@ class JBCParsingTest {
 			}
 		''').assertNoErrors
 	}
-	
-	
+
 	@Test
 	def void classFileWithEnclosingMethodAttribute() {
 		parse('''
@@ -368,7 +370,6 @@ class JBCParsingTest {
 			}
 		''').assertNoErrors
 	}
-	
 
 	@Test
 	def void codeGotoOntoItself() {

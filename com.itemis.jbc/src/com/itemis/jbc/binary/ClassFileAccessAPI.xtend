@@ -17,12 +17,15 @@ import com.itemis.jbc.jbc.ConstantLong
 import com.itemis.jbc.jbc.ConstantMethodHandle
 import com.itemis.jbc.jbc.ConstantMethodRef
 import com.itemis.jbc.jbc.ConstantMethodType
+import com.itemis.jbc.jbc.ConstantModule
 import com.itemis.jbc.jbc.ConstantNameAndType
+import com.itemis.jbc.jbc.ConstantPackage
 import com.itemis.jbc.jbc.ConstantPool
 import com.itemis.jbc.jbc.ConstantPoolEntry
 import com.itemis.jbc.jbc.ConstantString
 import com.itemis.jbc.jbc.ConstantUtf8
 import com.itemis.jbc.jbc.ConstantValue
+import com.itemis.jbc.jbc.EnclosingMethod
 import com.itemis.jbc.jbc.Exceptions
 import com.itemis.jbc.jbc.FieldInfo
 import com.itemis.jbc.jbc.InnerClasses
@@ -38,7 +41,6 @@ import com.itemis.jbc.jbc.impl.CodeTableEntryImplCustom
 import com.itemis.jbc.jbc.impl.ConstantPoolEntryImplCustom
 import java.nio.ByteBuffer
 import org.eclipse.emf.ecore.EObject
-import com.itemis.jbc.jbc.EnclosingMethod
 
 class ClassFileAccessAPI {
 
@@ -303,6 +305,10 @@ class ClassFileAccessAPI {
 				ConstantMethodType
 			case 18:
 				ConstantInvoceDynamic
+			case 19:
+				ConstantModule
+			case 20:
+				ConstantPackage
 			default:
 				throw new RuntimeException("Unknown tag: " + tag)
 		}
@@ -338,6 +344,10 @@ class ClassFileAccessAPI {
 				16
 			ConstantInvoceDynamic:
 				18
+			ConstantModule:
+				19
+			ConstantPackage:
+				20
 			default:
 				throw new RuntimeException("Unknown tag: " + entry)
 		}

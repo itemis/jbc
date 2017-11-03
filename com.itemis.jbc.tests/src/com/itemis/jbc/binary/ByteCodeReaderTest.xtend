@@ -253,13 +253,31 @@ class ByteCodeReaderTest {
 				constantInvoceDynamic(u1(18), u2(1), nameAndType)))
 	}
 
+	@Test def constantPoolOneModule() {
+		var ConstantUtf8 utf8
+		assertTreeMatches(readConstantPool(3, '''
+			01 0000
+			13 0001
+		'''), constantPool(utf8 = constantUtf8(u1(1), uString("")), constantModule(u1(19), utf8)))
+
+	}
+
+	@Test def constantPoolOnePackage() {
+		var ConstantUtf8 utf8
+		assertTreeMatches(readConstantPool(3, '''
+			01 0000
+			14 0001
+		'''), constantPool(utf8 = constantUtf8(u1(1), uString("")), constantPackage(u1(20), utf8)))
+
+	}
+
 	@Test def classFileWithOneConstantPoolEntryOfEachType() {
 		var ConstantUtf8 utf8
 		var ConstantClass class
 		var ConstantNameAndType nameAndType
 		assertTreeMatches(readClassFile('''
 			cafebabe 0000 0034
-			0011
+			0013
 				01 0002 61 62
 				03 00000004
 				04 00000005
@@ -274,13 +292,15 @@ class ByteCodeReaderTest {
 				0F 01 000A
 				10 0001
 				12 0001 000A
+				13 0001
+				14 0001
 			0002 0008 0008
 			0000
 			0000
 			0000
 			0000
 		'''),
-			classFile(u4(-889275714), u2(0), u2(52), u2(17),
+			classFile(u4(-889275714), u2(0), u2(52), u2(19),
 				constantPool(utf8 = constantUtf8(u1(1), uString("ab")), constantInteger(u1(3), u4(4)),
 					constantFloat(u1(4), u4(5)), constantLong(u1(5), u4(1), u4(2)), constantDouble(u1(6), u4(1), u4(2)),
 					class = constantClass(u1(7), utf8), constantString(u1(8), utf8),
@@ -288,8 +308,9 @@ class ByteCodeReaderTest {
 					constantMethodRef(u1(10), class, nameAndType),
 					constantInterfaceMethodRef(u1(11), class, nameAndType),
 					constantMethodHandle(u1(15), u1(1), nameAndType), constantMethodType(u1(16), utf8),
-					constantInvoceDynamic(u1(18), u2(1), nameAndType)), u2(2), class, class, u2(0), interfaces(), u2(0),
-				fields(), u2(0), methods(), u2(0), attributes()))
+					constantInvoceDynamic(u1(18), u2(1), nameAndType), constantModule(u1(19), utf8),
+					constantPackage(u1(20), utf8)), u2(2), class, class, u2(0), interfaces(), u2(0), fields(), u2(0),
+				methods(), u2(0), attributes()))
 	}
 
 	@Test def classFileWithInterfaces() {
@@ -490,9 +511,9 @@ class ByteCodeReaderTest {
 				constantPool(utf8 = constantUtf8(u1(1), uString("SourceFile"))), u2(2), null, null, u2(0), interfaces(),
 				u2(0), fields(), u2(0), methods(), u2(1), attributes(attributeSourceFile(utf8, u4(2), utf8))))
 	}
-	
+
 	@Test def classFileWithEnclosingMethodAttribute() {
-		var ConstantUtf8 extendedClassUtf8	
+		var ConstantUtf8 extendedClassUtf8
 		var ConstantUtf8 enclosingClassUtf8
 		var ConstantUtf8 thisClassUtf8
 		var ConstantUtf8 enclosingMethod
@@ -514,20 +535,17 @@ class ByteCodeReaderTest {
 			0000
 			0001
 				0004 00000004 0006 0000
-		'''),
-			classFile(u4(-889275714), u2(0), u2(52), u2(8),
-				constantPool(
-					extendedClassUtf8 = constantUtf8(u1(1), uString("DummyClass")),
-					enclosingClassUtf8 = constantUtf8(u1(1), uString("HelloWorld")),
-					thisClassUtf8 = constantUtf8(u1(1), uString("HelloWorld$1Test")),
-					enclosingMethod = constantUtf8(u1(1), uString("EnclosingMethod")),
-					extendedClass = constantClass(u1(7), enclosingClassUtf8),
-					enclosingClass = constantClass(u1(7), extendedClassUtf8),
-					thisClass = constantClass(u1(7), thisClassUtf8)
-				), u2(32), thisClass, extendedClass, u2(0), interfaces(),
-				u2(0), fields(), u2(0), methods(), u2(1), attributes(
-					attributeEnclosingMethod(enclosingMethod, u4(4), enclosingClass, null)
-				)))
+		'''), classFile(u4(-889275714), u2(0), u2(52), u2(8), constantPool(
+			extendedClassUtf8 = constantUtf8(u1(1), uString("DummyClass")),
+			enclosingClassUtf8 = constantUtf8(u1(1), uString("HelloWorld")),
+			thisClassUtf8 = constantUtf8(u1(1), uString("HelloWorld$1Test")),
+			enclosingMethod = constantUtf8(u1(1), uString("EnclosingMethod")),
+			extendedClass = constantClass(u1(7), enclosingClassUtf8),
+			enclosingClass = constantClass(u1(7), extendedClassUtf8),
+			thisClass = constantClass(u1(7), thisClassUtf8)
+		), u2(32), thisClass, extendedClass, u2(0), interfaces(), u2(0), fields(), u2(0), methods(), u2(1), attributes(
+			attributeEnclosingMethod(enclosingMethod, u4(4), enclosingClass, null)
+		)))
 	}
 
 	@Test def codeLDC() {

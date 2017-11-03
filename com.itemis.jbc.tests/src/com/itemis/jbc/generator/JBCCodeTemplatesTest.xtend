@@ -24,8 +24,7 @@ class JBCCodeTemplatesTest {
 
 	@Inject extension ParseHelper<ClassFile> parseClass
 
-	@Test
-	def classFileMostSimple() {
+	@Test def classFileMostSimple() {
 		'''
 			ClassFile {
 				CAFEBABE 0001 0002 0001 ConstantPool {
@@ -42,8 +41,7 @@ class JBCCodeTemplatesTest {
 		'''.assertUnchanged
 	}
 
-	@Test
-	def constanntPoolWithSimpleUtf8() {
+	@Test def constanntPoolWithSimpleUtf8() {
 		assertEquals('''
 			ConstantPool {
 				utf8 01 ""
@@ -51,8 +49,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantUtf8(u1(1), uString("")))))
 	}
 
-	@Test
-	def constanntPoolWithLongUtf8() {
+	@Test def constanntPoolWithLongUtf8() {
 		assertEquals('''
 			ConstantPool {
 				utf8 01 "ConstantValue"
@@ -60,8 +57,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantUtf8(u1(1), uString("ConstantValue")))))
 	}
 
-	@Test
-	def constanntPoolWithInteger() {
+	@Test def constanntPoolWithInteger() {
 		assertEquals('''
 			ConstantPool {
 				integer 02 00000001
@@ -69,8 +65,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantInteger(u1(2), u4(1)))))
 	}
 
-	@Test
-	def constanntPoolWithFloat() {
+	@Test def constanntPoolWithFloat() {
 		assertEquals('''
 			ConstantPool {
 				float 03 00000001
@@ -78,8 +73,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantFloat(u1(3), u4(1)))))
 	}
 
-	@Test
-	def constanntPoolWithLong() {
+	@Test def constanntPoolWithLong() {
 		assertEquals('''
 			ConstantPool {
 				long 05 00000001 00000002
@@ -87,8 +81,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantLong(u1(5), u4(1), u4(2)))))
 	}
 
-	@Test
-	def constanntPoolWithDouble() {
+	@Test def constanntPoolWithDouble() {
 		assertEquals('''
 			ConstantPool {
 				double 06 00000001 00000002
@@ -97,8 +90,7 @@ class JBCCodeTemplatesTest {
 	}
 
 	// TODO write tests with references
-	@Test
-	def constanntPoolWithClass() {
+	@Test def constanntPoolWithClass() {
 		assertEquals('''
 			ConstantPool {
 				class 06 0000
@@ -106,8 +98,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantClass(u1(6), null))))
 	}
 
-	@Test
-	def constanntPoolWithString() {
+	@Test def constanntPoolWithString() {
 		assertEquals('''
 			ConstantPool {
 				string 06 0000
@@ -115,8 +106,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantString(u1(6), null))))
 	}
 
-	@Test
-	def constanntPoolWithFieldRef() {
+	@Test def constanntPoolWithFieldRef() {
 		assertEquals('''
 			ConstantPool {
 				fieldRef 09 0000 0000
@@ -124,8 +114,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantFieldRef(u1(9), null, null))))
 	}
 
-	@Test
-	def constanntPoolWithMethodRef() {
+	@Test def constanntPoolWithMethodRef() {
 		assertEquals('''
 			ConstantPool {
 				methodRef 0A 0000 0000
@@ -133,8 +122,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantMethodRef(u1(10), null, null))))
 	}
 
-	@Test
-	def constanntPoolWithInterfaceMethodRef() {
+	@Test def constanntPoolWithInterfaceMethodRef() {
 		assertEquals('''
 			ConstantPool {
 				interfaceMethodRef 0B 0000 0000
@@ -142,8 +130,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantInterfaceMethodRef(u1(11), null, null))))
 	}
 
-	@Test
-	def constanntPoolWithNameAndType() {
+	@Test def constanntPoolWithNameAndType() {
 		assertEquals('''
 			ConstantPool {
 				nameAndType 0C 0000 0000
@@ -151,8 +138,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantNameAndType(u1(12), null, null))))
 	}
 
-	@Test
-	def constanntPoolWithMethodHandle() {
+	@Test def constanntPoolWithMethodHandle() {
 		assertEquals('''
 			ConstantPool {
 				methodHandle 0F 01 0000
@@ -160,8 +146,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantMethodHandle(u1(15), u1(1), null))))
 	}
 
-	@Test
-	def constanntPoolWithMethodType() {
+	@Test def constanntPoolWithMethodType() {
 		assertEquals('''
 			ConstantPool {
 				methodType 10 0000
@@ -169,8 +154,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantMethodType(u1(16), null))))
 	}
 
-	@Test
-	def constanntPoolWithInvoceDynamic() {
+	@Test def constanntPoolWithInvoceDynamic() {
 		assertEquals('''
 			ConstantPool {
 				invoceDynamic 12 0003 0000
@@ -178,8 +162,23 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(constantPool(constantInvoceDynamic(u1(18), u2(3), null))))
 	}
 
-	@Test
-	def classFileWithAllConstantPoolEntries() {
+	@Test def constanntPoolWithModule() {
+		assertEquals('''
+			ConstantPool {
+				module 13 0000
+			}
+		'''.toString, code(constantPool(constantModule(u1(19), null))))
+	}
+
+	@Test def constanntPoolWithPackage() {
+		assertEquals('''
+			ConstantPool {
+				package 14 0000
+			}
+		'''.toString, code(constantPool(constantPackage(u1(20), null))))
+	}
+
+	@Test def classFileWithAllConstantPoolEntries() {
 		'''
 			ClassFile {
 				CAFEBABE 0001 0002 0011 ConstantPool {
@@ -197,6 +196,8 @@ class JBCCodeTemplatesTest {
 					methodHandle 0F 01 000A
 					methodType 10 0001
 					invoceDynamic 12 0001 000A
+					module 13 0001
+					package 14 0001
 				}
 				0001 0008 0008 0000 Interfaces {
 				}
@@ -210,8 +211,7 @@ class JBCCodeTemplatesTest {
 		'''.assertUnchanged
 	}
 
-	@Test
-	def classFileWithInterfaces() {
+	@Test def classFileWithInterfaces() {
 		'''
 			ClassFile {
 				CAFEBABE 0001 0002 0005 ConstantPool {
@@ -235,16 +235,14 @@ class JBCCodeTemplatesTest {
 		'''.assertUnchanged
 	}
 
-	@Test
-	def simpleField() {
+	@Test def simpleField() {
 		assertEquals('''
 			field 0001 0000 0000 0000 Attributes {
 			}
 		'''.toString, code(fieldInfo(u2(1), null, null, u2(0), attributes())))
 	}
 
-	@Test
-	def classFileWithTwoFields() {
+	@Test def classFileWithTwoFields() {
 		'''
 			ClassFile {
 				CAFEBABE 0001 0002 0002 ConstantPool {
@@ -266,16 +264,14 @@ class JBCCodeTemplatesTest {
 		'''.assertUnchanged
 	}
 
-	@Test
-	def simpleMethod() {
+	@Test def simpleMethod() {
 		assertEquals('''
 			method 0001 0000 0000 0000 Attributes {
 			}
 		'''.toString, code(methodInfo(u2(1), null, null, u2(0), attributes())))
 	}
 
-	@Test
-	def classFileWithTwoMethods() {
+	@Test def classFileWithTwoMethods() {
 		'''
 			ClassFile {
 				CAFEBABE 0001 0002 0002 ConstantPool {
@@ -297,8 +293,7 @@ class JBCCodeTemplatesTest {
 		'''.assertUnchanged
 	}
 
-	@Test
-	def attributeUnknownSimple() {
+	@Test def attributeUnknownSimple() {
 		assertEquals('''
 			Attributes {
 				unknown 0000 00000000 Info { }
@@ -306,8 +301,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(attributes(attributeUnknown(null, u4(0)))))
 	}
 
-	@Test
-	def attributeUnknownComplex() {
+	@Test def attributeUnknownComplex() {
 		assertEquals('''
 			Attributes {
 				unknown 0000 00000004 Info { 01 02 03 04 }
@@ -315,8 +309,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(attributes(attributeUnknown(null, u4(4), u1(1), u1(2), u1(3), u1(4)))))
 	}
 
-	@Test
-	def classFileWithTwoUnknownAttributes() {
+	@Test def classFileWithTwoUnknownAttributes() {
 		'''
 			ClassFile {
 				CAFEBABE 0001 0002 0001 ConstantPool {
@@ -335,8 +328,7 @@ class JBCCodeTemplatesTest {
 		'''.assertUnchanged
 	}
 
-	@Test
-	def attributeConstantValue() {
+	@Test def attributeConstantValue() {
 		assertEquals('''
 			Attributes {
 				constantValue 0000 00000002 0000
@@ -344,8 +336,7 @@ class JBCCodeTemplatesTest {
 		'''.toString, code(attributes(attributeConstantValue(null, u4(2), null))))
 	}
 
-	@Test
-	def attributeCode() {
+	@Test def attributeCode() {
 		assertEquals('''
 			Attributes {
 				code 0000 00000002 0003 0004 00000002 Code {
@@ -362,8 +353,7 @@ class JBCCodeTemplatesTest {
 						exceptionTable(), u2(0), attributes()))))
 	}
 
-	@Test
-	def attributeCodeWithExceptionTableEntries() {
+	@Test def attributeCodeWithExceptionTableEntries() {
 		var CodeTableEntry e0
 		var CodeTableEntry e1
 		assertEquals('''
@@ -385,8 +375,7 @@ class JBCCodeTemplatesTest {
 							exceptionTableEntry(e0, e1, e1, null)), u2(0), attributes()))))
 	}
 
-	@Test
-	def attributeCodeWithAttribute() {
+	@Test def attributeCodeWithAttribute() {
 		assertEquals('''
 			Attributes {
 				code 0000 00000002 0003 0004 00000002 Code {
@@ -420,13 +409,13 @@ class JBCCodeTemplatesTest {
 			}
 		'''.toString, code(attributes(attributeLineNumberTable(null, u4(2), u2(0)))))
 	}
-	
+
 	@Test def attributeEnclosingMethod() {
 		assertEquals('''
 			Attributes {
 				enclosingMethod 0000 0000000A 0000 0000
 			}
-			'''.toString, code(attributes(attributeEnclosingMethod(null, u4(10), null, null))))
+		'''.toString, code(attributes(attributeEnclosingMethod(null, u4(10), null, null))))
 	}
 
 	private def assertUnchanged(CharSequence input) {
