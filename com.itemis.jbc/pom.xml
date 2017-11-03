@@ -17,21 +17,7 @@
 				<version>1.4.0</version>
 				<executions>
 					<execution>
-						<id>workflow1</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<arguments>
-								<argument>/${project.basedir}/src/com/itemis/jbc/GenerateJBCRegenerate.mwe2</argument>
-								<argument>-p</argument>
-								<argument>rootPath=/${project.basedir}/..</argument>
-							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>workflow2</id>
+						<id>workflow</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>java</goal>

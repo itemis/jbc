@@ -31,7 +31,6 @@ Workflow {
 		language = StandardLanguage {
 			name = "com.itemis.jbc.JBC"
 			fileExtensions = "jbc,class"
-			referencedResource = "platform:/resource/com.itemis.jbc/model/generated/JBC.genmodel"
 			serializer = {
 				generateStub = false
 			}
@@ -43,10 +42,5 @@ Workflow {
 	bean = org.eclipse.emf.mwe.utils.StandaloneSetup {
 		scanClassPath = true
 		platformUri = rootPath
-	}
-	component = org.eclipse.emf.mwe2.ecore.EcoreGenerator {
-		generateCustomClasses = true
-		genModel = "platform:/resource/com.itemis.jbc/model/generated/JBC.genmodel"
-		srcPath = "platform:/resource/com.itemis.jbc/src"
 	}
 }

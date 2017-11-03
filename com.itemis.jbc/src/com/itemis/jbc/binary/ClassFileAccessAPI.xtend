@@ -37,12 +37,18 @@ import com.itemis.jbc.jbc.U1
 import com.itemis.jbc.jbc.U2
 import com.itemis.jbc.jbc.U4
 import com.itemis.jbc.jbc.Unknown
-import com.itemis.jbc.jbc.impl.CodeTableEntryImplCustom
-import com.itemis.jbc.jbc.impl.ConstantPoolEntryImplCustom
 import java.nio.ByteBuffer
+import java.util.HashMap
+import java.util.Map
+import java.util.WeakHashMap
 import org.eclipse.emf.ecore.EObject
 
 class ClassFileAccessAPI {
+
+	/** Cache for index of constant pool entries inside the constant pool */
+	static Map<ConstantPool, Map<ConstantPoolEntry, Integer>> constantPoolIndexCache = new WeakHashMap
+	/** Cache for index of code table entries inside each code table */
+	static Map<CodeTable, Map<CodeTableEntry, Integer>> codeTableOffsetCache = new WeakHashMap
 
 	private new() {
 		// facade with only static methods for static import
@@ -191,10 +197,6 @@ class ClassFileAccessAPI {
 		return result
 	}
 
-	private static def calculateReferenceIndex(ConstantPool constantPool, ConstantPoolEntry entry) {
-		return (entry as ConstantPoolEntryImplCustom).getConstantPoolReferenceIndex();
-	}
-
 	static def getStringValue(ConstantUtf8 constantUtf8) {
 		constantUtf8.content.value
 	}
@@ -273,6 +275,27 @@ class ClassFileAccessAPI {
 
 	static def int index(ConstantPoolEntry entry) {
 		entry?.constantPool?.calculateReferenceIndex(entry)
+	}
+
+	private static def int calculateReferenceIndex(ConstantPool constantPool, ConstantPoolEntry entry) {
+		var Map<ConstantPoolEntry, Integer> list = constantPoolIndexCache.get(constantPool)
+		if (list === null) {
+			constantPoolIndexCache.put(constantPool, list = constantPool.calculateReferenceIndexList)
+		}
+		return list.get(entry)
+//		return (entry as ConstantPoolEntryImplCustom).getConstantPoolReferenceIndex();
+	}
+
+	private static def Map<ConstantPoolEntry, Integer> calculateReferenceIndexList(ConstantPool constantPool) {
+		var Map<ConstantPoolEntry, Integer> result = new HashMap
+		var index = 1
+		for (constant : constantPool.cpInfo) {
+			result.put(constant, index)
+			if (constant instanceof ConstantDouble || constant instanceof ConstantLong)
+				index++
+			index++
+		}
+		return result
 	}
 
 	static def Class<? extends ConstantPoolEntry> entryTypeForTag(int tag) {
@@ -357,6 +380,24 @@ class ClassFileAccessAPI {
 		entry?.table.offset(entry)
 	}
 
+	private static def offset(CodeTable table, CodeTableEntry entry) {
+		var offsetTable = codeTableOffsetCache.get(table)
+		if (offsetTable === null) {
+			codeTableOffsetCache.put(table, offsetTable = table.calculateOffsetTable)
+		}
+		return offsetTable.get(entry)
+	}
+
+	private static def calculateOffsetTable(CodeTable table) {
+		val result = new HashMap
+		var offset = 0
+		for (entry : table.instruction) {
+			result.put(entry, offset)
+			offset += Opcode.byteCount(entry)
+		}
+		return result
+	}
+
 	static def getTable(CodeTableEntry entry) {
 		entry.eContainer as CodeTable
 	}
@@ -373,10 +414,6 @@ class ClassFileAccessAPI {
 			i++
 		} while (offset <= targetOffset)
 		return null
-	}
-
-	private static def offset(CodeTable table, CodeTableEntry entry) {
-		return (entry as CodeTableEntryImplCustom).getCodeOffset();
 	}
 
 	static def int byteCount(AttributeInfo attribute) {
