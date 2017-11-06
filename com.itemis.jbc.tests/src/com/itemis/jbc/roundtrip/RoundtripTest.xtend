@@ -61,6 +61,10 @@ class RoundtripTest {
 		assertRoundTrip("module-info2.cls", loadByteCode("module-info2.cls", RoundtripTest))
 	}
 
+	@Test def moduleClassWithAllOptions() {
+		assertRoundTrip("module-info3.cls", loadByteCode("module-info3.cls", RoundtripTest))
+	}
+
 	private def void assertRoundTrip(Class<?> c) {
 		assertRoundTrip(c.name, loadByteCode(c))
 	}

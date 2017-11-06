@@ -41,6 +41,8 @@ import org.eclipse.xtext.ui.label.AbstractLabelProvider
 
 import static extension com.itemis.jbc.binary.ClassFileAccessAPI.*
 import org.eclipse.jface.viewers.StyledString.Styler
+import com.itemis.jbc.jbc.ConstantModule
+import com.itemis.jbc.jbc.ConstantPackage
 
 /**
  * Provides labels for EObjects.
@@ -137,6 +139,10 @@ class JBCLabelProvider extends AbstractLabelProvider implements IStyledLabelProv
 				return styledText(element)
 			ConstantInvoceDynamic:
 				return styledText(element)
+			ConstantModule:
+				return styledText(element)
+			ConstantPackage:
+				return styledText(element)
 			MethodInfo:
 				return styledText(element)
 			FieldInfo:
@@ -210,7 +216,7 @@ class JBCLabelProvider extends AbstractLabelProvider implements IStyledLabelProv
 	}
 
 	private def styledText(ConstantUtf8 constant) {
-		new StyledString("utf8 ", KEYWORD_THIN_STYLER).add(constant.content.value, STRING_STYLER)
+		new StyledString("utf8 ", KEYWORD_THIN_STYLER).add(constant?.content?.value, STRING_STYLER)
 	}
 
 	private def styledText(ConstantFieldRef constant) {
@@ -267,6 +273,14 @@ class JBCLabelProvider extends AbstractLabelProvider implements IStyledLabelProv
 			Integer.toString(constant.bootstrapMethodAttrIndex.intValue)).add(" ").add(
 			constant?.nameAndTypeIndex?.nameIndex?.content?.value).add(" ").add(
 			constant?.nameAndTypeIndex?.descriptorIndex?.content?.value, GREY_STYLER)
+	}
+
+	private def styledText(ConstantModule constant) {
+		new StyledString("module ", KEYWORD_THIN_STYLER).add(constant.nameIndex.content.value)
+	}
+
+	private def styledText(ConstantPackage constant) {
+		new StyledString("package ", KEYWORD_THIN_STYLER).add(constant.nameIndex.content.value)
 	}
 
 	private def styledText(FieldInfo field) {

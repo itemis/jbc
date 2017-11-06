@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 
 import static com.itemis.jbc.binary.ClassFileFactoryAPI.*
 import static com.itemis.jbc.binary.TestHelper.*
+import com.itemis.jbc.jbc.ConstantModule
 
 @RunWith(XtextRunner)
 @InjectWith(JBCInjectorProvider)
@@ -546,6 +547,36 @@ class ByteCodeReaderTest {
 		), u2(32), thisClass, extendedClass, u2(0), interfaces(), u2(0), fields(), u2(0), methods(), u2(1), attributes(
 			attributeEnclosingMethod(enclosingMethod, u4(4), enclosingClass, null)
 		)))
+	}
+
+	@Test def classFileWithModuleAttribute() {
+		var ConstantUtf8 utf8
+		var ConstantClass class
+		var ConstantModule module
+		assertTreeMatches(readClassFile('''
+			cafebabe 0000 0034
+			0004
+				01 0006 4D 6F 64 75 6C 65
+				07 0001
+				13 0001
+			0001 0002 0002 0000
+			0000
+			0000
+			0001
+				0001 00000008 0003 0000 0000
+				0000
+				0000
+				0000
+				0000
+				0000
+		'''),
+			classFile(u4(-889275714), u2(0), u2(52), u2(4),
+				constantPool(utf8 = constantUtf8(u1(1), uString("Module")), class = constantClass(u1(7), utf8),
+					module = constantModule(u1(19), utf8)), u2(1), class, class, u2(0), interfaces(), u2(0), fields(),
+				u2(0), methods(), u2(1),
+				attributes(
+					attributeModule(utf8, u4(8), module, u2(0), null, u2(0), #[], u2(0), #[], u2(0), #[], u2(0), #[],
+						u2(0), #[]))))
 	}
 
 	@Test def codeLDC() {

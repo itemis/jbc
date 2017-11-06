@@ -42,6 +42,7 @@ import java.util.HashMap
 import java.util.Map
 import java.util.WeakHashMap
 import org.eclipse.emf.ecore.EObject
+import com.itemis.jbc.jbc.Module
 
 class ClassFileAccessAPI {
 
@@ -163,6 +164,16 @@ class ClassFileAccessAPI {
 	static def ConstantNameAndType getConstantNameAndType(ConstantPool constantPool, int index) {
 		val constant = constantPool?.getConstant(index)
 		return if(constant instanceof ConstantNameAndType) constant else null
+	}
+
+	static def ConstantModule getConstantModule(ConstantPool constantPool, int index) {
+		val constant = constantPool?.getConstant(index)
+		return if(constant instanceof ConstantModule) constant else null
+	}
+
+	static def ConstantPackage getConstantPackage(ConstantPool constantPool, int index) {
+		val constant = constantPool?.getConstant(index)
+		return if(constant instanceof ConstantPackage) constant else null
 	}
 
 	static def ConstantPoolEntry getConstant(ConstantPool constantPool, int index) {
@@ -436,6 +447,13 @@ class ClassFileAccessAPI {
 				return 2 + attribute.innerClasses.length * 8
 			EnclosingMethod:
 				return 4
+			Module: {
+				return 2 + 2 + 2 + 2 + attribute.requires.length * 6
+					+ 2 + attribute.exports.map[e|2 + 2 + 2 + e.exportsTo.length * 2].reduce[a,b|a + b]
+					+ 2 + attribute.opens.map[e|2 + 2 + 2 + e.opensTo.length * 2].reduce[a,b|a + b]
+					+ 2 + attribute.uses.length * 2
+					+ 2 + attribute.provides.map[e|2 + 2 + e.providesWith.length * 2].reduce[a,b|a + b]
+				}
 			Unknown:
 				return attribute.info.length
 		}

@@ -14,6 +14,10 @@ class JBCLinkingDiagnosticMessageProvider extends LinkingDiagnosticMessageProvid
 			return null
 		if (context.reference == JbcPackage.eINSTANCE.innerClass_InnerNameIndex && "0000" == context.linkText)
 			return null
+		if (context.reference == JbcPackage.eINSTANCE.module_ModuleVersionIndex && "0000" == context.linkText)
+			return null
+		if (context.reference == JbcPackage.eINSTANCE.requires_RequiresVersionIndex && "0000" == context.linkText)
+			return null
 		return super.getUnresolvedProxyMessage(context)
 	}
 

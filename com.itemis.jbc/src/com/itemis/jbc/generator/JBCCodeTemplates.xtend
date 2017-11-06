@@ -242,6 +242,7 @@ import static extension com.itemis.jbc.binary.ClassFileAccessAPI.*
 import com.itemis.jbc.jbc.EnclosingMethod
 import com.itemis.jbc.jbc.ConstantModule
 import com.itemis.jbc.jbc.ConstantPackage
+import com.itemis.jbc.jbc.Module
 
 class JBCCodeTemplates {
 
@@ -437,6 +438,37 @@ class JBCCodeTemplates {
 	
 	def dispatch static String attributeCode(EnclosingMethod attribute) {
 		'''enclosingMethod «attribute.attributeNameIndex.index.u2Value» «attribute.attributeLength.value» «attribute.classIndex.index.u2Value» «attribute.methodIndex.index.u2Value»'''
+	}
+
+	def dispatch static String attributeCode(Module attribute) {
+		'''
+		module «attribute.attributeNameIndex.index.u2Value» «attribute.attributeLength.value» «attribute.moduleNameIndex.index.u2Value» «attribute.moduleFlags.value» «attribute.moduleVersionIndex.index.u2Value»
+			«attribute.requiresCount.value» Requires {
+				«FOR require : attribute.requires»
+					require «require.requiresIndex.index.u2Value» «require.requiresFlags.value» «require.requiresVersionIndex.index.u2Value»
+				«ENDFOR»
+			}
+			«attribute.exportsCount.value» Exports {
+				«FOR export : attribute.exports»
+					export «export.exportsIndex.index.u2Value» «export.exportsFlags.value» «export.exportsToCount.value» To {«FOR exportTo : export.exportsTo» «exportTo.exportsToIndex.index.u2Value» «ENDFOR»}
+				«ENDFOR»
+			}
+			«attribute.opensCount.value» Opens {
+				«FOR open : attribute.opens»
+					open «open.opensIndex.index.u2Value» «open.opensFlags.value» «open.opensToCount.value» To {«FOR opensTo : open.opensTo» «opensTo.opensToIndex.index.u2Value» «ENDFOR»}
+				«ENDFOR»
+			}
+			«attribute.usesCount.value» Uses {
+				«FOR use : attribute.uses»
+					use «use.usesIndex.index.u2Value»
+				«ENDFOR»
+			}
+			«attribute.providesCount.value» Provides {
+				«FOR provide : attribute.provides»
+					provide «provide.providesIndex.index.u2Value» «provide.providesWithCount.value» With {«FOR providesWith : provide.providesWith» «providesWith.providesWithIndex.index.u2Value» «ENDFOR»}
+				«ENDFOR»
+			}
+		'''
 	}
 
 	private def static String code(CodeTable codeTable) {

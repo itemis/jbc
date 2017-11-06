@@ -17,6 +17,7 @@ import com.itemis.jbc.jbc.ConstantMethodRef
 import com.itemis.jbc.jbc.ConstantMethodType
 import com.itemis.jbc.jbc.ConstantModule
 import com.itemis.jbc.jbc.ConstantNameAndType
+import com.itemis.jbc.jbc.ConstantPackage
 import com.itemis.jbc.jbc.ConstantPool
 import com.itemis.jbc.jbc.ConstantPoolEntry
 import com.itemis.jbc.jbc.ConstantString
@@ -52,7 +53,6 @@ import java.util.Map
 import static com.itemis.jbc.binary.ClassFileFactoryAPI.*
 
 import static extension com.itemis.jbc.binary.ClassFileAccessAPI.*
-import com.itemis.jbc.jbc.ConstantPackage
 
 class ByteCodeReader {
 
@@ -272,6 +272,8 @@ class ByteCodeReader {
 			return readInnerClassesAttribute(attributeNameIndex, attributeLength)
 		} else if ("EnclosingMethod".equals(attributeNameIndex.getStringValue())) {
 			return readEnclosingMethodAttribute(attributeNameIndex, attributeLength)
+		} else if ("Module".equals(attributeNameIndex.getStringValue())) {
+			return readModuleAttribute(attributeNameIndex, attributeLength)
 		}
 		return readUnknownAttribute(attributeNameIndex, attributeLength)
 	}
@@ -454,6 +456,92 @@ class ByteCodeReader {
 		return result
 	}
 
+	private def readModuleAttribute(ConstantUtf8 attributeNameIndex, U4 attributeLength) {
+		val result = JbcFactory.eINSTANCE.createModule
+		result.attributeNameIndex = attributeNameIndex
+		result.attributeLength = attributeLength
+		result.moduleNameIndex = readConstantModuleRef
+		result.moduleFlags = readU2
+		result.moduleVersionIndex = readConstantUtf8Ref
+		result.requiresCount = readU2
+		for (var n = 0; n < result.requiresCount.intValue; n++)
+			result.requires.add(readRequires)
+		result.exportsCount = readU2
+		for (var n = 0; n < result.exportsCount.intValue; n++)
+			result.exports.add(readExports)
+		result.opensCount = readU2
+		for (var n = 0; n < result.opensCount.intValue; n++)
+			result.opens.add(readOpens)
+		result.usesCount = readU2
+		for (var n = 0; n < result.usesCount.intValue; n++)
+			result.uses.add(readUses)
+		result.providesCount = readU2
+		for (var n = 0; n < result.providesCount.intValue; n++)
+			result.provides.add(readProvides)
+		return result
+	}
+
+	package def readRequires() {
+		val result = JbcFactory.eINSTANCE.createRequires
+		result.requiresIndex = readConstantModuleRef
+		result.requiresFlags = readU2
+		result.requiresVersionIndex = readConstantUtf8Ref
+		return result
+	}
+
+	package def readExports() {
+		val result = JbcFactory.eINSTANCE.createExports
+		result.exportsIndex = readConstantPackageRef
+		result.exportsFlags = readU2
+		result.exportsToCount = readU2
+		for (var n = 0; n < result.exportsToCount.intValue; n++)
+			result.exportsTo.add(readExportsTo)
+		return result
+	}
+
+	package def readExportsTo() {
+		val result = JbcFactory.eINSTANCE.createExportsTo
+		result.exportsToIndex = readConstantModuleRef
+		return result
+	}
+
+	package def readOpens() {
+		val result = JbcFactory.eINSTANCE.createOpens
+		result.opensIndex = readConstantPackageRef
+		result.opensFlags = readU2
+		result.opensToCount = readU2
+		for (var n = 0; n < result.opensToCount.intValue; n++)
+			result.opensTo.add(readOpensTo)
+		return result
+	}
+
+	package def readOpensTo() {
+		val result = JbcFactory.eINSTANCE.createOpensTo
+		result.opensToIndex = readConstantModuleRef
+		return result
+	}
+
+	package def readUses() {
+		val result = JbcFactory.eINSTANCE.createUses
+		result.usesIndex = readConstantClassRef
+		return result
+	}
+
+	package def readProvides() {
+		val result = JbcFactory.eINSTANCE.createProvides
+		result.providesIndex = readConstantClassRef
+		result.providesWithCount = readU2
+		for (var n = 0; n < result.providesWithCount.intValue; n++)
+			result.providesWith.add(readProvidesWith)
+		return result
+	}
+
+	package def readProvidesWith() {
+		val result = JbcFactory.eINSTANCE.createProvidesWith
+		result.providesWithIndex = readConstantClassRef
+		return result
+	}
+
 	package def readConstantPoolEntryRef() {
 		classFile.constantPool.getConstant(stream.readUnsignedShort)
 	}
@@ -480,6 +568,14 @@ class ByteCodeReader {
 
 	package def readConstantNameAndTypeRef() {
 		classFile.constantPool.getConstantNameAndType(stream.readUnsignedShort)
+	}
+
+	package def readConstantModuleRef() {
+		classFile.constantPool.getConstantModule(stream.readUnsignedShort)
+	}
+
+	package def readConstantPackageRef() {
+		classFile.constantPool.getConstantPackage(stream.readUnsignedShort)
 	}
 
 	package def readCodeTableEntryRef() {

@@ -114,7 +114,8 @@ AttributeInfo:
 	| LocalVariableTable
 	| Exceptions
 	| InnerClasses
-	| EnclosingMethod;
+	| EnclosingMethod
+	| Module;
 
 Unknown:
 	'unknown' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 'Info' '{' info+=U1* '}';
@@ -386,6 +387,38 @@ InnerClass: 'innerClass' innerClassInfoIndex=[ConstantClass|HEX4] outerClassInfo
 
 EnclosingMethod:
 	'enclosingMethod' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 classIndex=[ConstantClass|HEX4] methodIndex=[ConstantNameAndType|HEX4]; //TODO methodIndex could be 0000, should cause no error
+
+Module:
+	'module' attributeNameIndex=[ConstantUtf8|HEX4] attributeLength=U4 moduleNameIndex=[ConstantModule|HEX4] moduleFlags=U2 moduleVersionIndex=[ConstantUtf8|HEX4]
+	requiresCount=U2 'Requires' '{' requires+=Requires* '}'
+	exportsCount=U2 'Exports' '{' exports+=Exports* '}'
+	opensCount=U2 'Opens' '{' opens+=Opens* '}'
+	usesCount=U2 'Uses' '{' uses+=Uses* '}'
+	providesCount=U2 'Provides' '{' provides+=Provides* '}';
+
+Requires:
+	{Requires} 'require' requiresIndex=[ConstantModule|HEX4] requiresFlags=U2 requiresVersionIndex=[ConstantUtf8|HEX4];
+
+Exports:
+	{Exports} 'export' exportsIndex=[ConstantPackage|HEX4] exportsFlags=U2 exportsToCount=U2 'To' '{' exportsTo+=ExportsTo* '}';
+
+ExportsTo:
+	{ExportsTo} exportsToIndex=[ConstantModule|HEX4];
+
+Opens:
+	{Opens} 'open' opensIndex=[ConstantPackage|HEX4] opensFlags=U2 opensToCount=U2 'To' '{' opensTo+=OpensTo* '}';
+
+OpensTo:
+	{OpensTo} opensToIndex=[ConstantModule|HEX4];
+
+Uses:
+	{Uses} 'use' usesIndex=[ConstantClass|HEX4];
+
+Provides:
+	{Provides} 'provide' providesIndex=[ConstantClass|HEX4] providesWithCount=U2 'With' '{' providesWith+=ProvidesWith* '}';
+
+ProvidesWith:
+	{ProvidesWith} providesWithIndex=[ConstantClass|HEX4];
 
 U1:
 	value=HEX2;

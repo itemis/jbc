@@ -328,6 +328,36 @@ class JBCCodeTemplatesTest {
 		'''.assertUnchanged
 	}
 
+	@Test def classFileWithAttributeModule() {
+		'''
+			ClassFile {
+				CAFEBABE 0001 0002 0003 ConstantPool {
+					utf8 01 "Module"
+					class 07 0001
+				}
+				0001 0002 0002 0000 Interfaces {
+				}
+				0000 Fields {
+				}
+				0000 Methods {
+				}
+				0001 Attributes {
+					module 0001 00000008 0000 0000 0000
+						0000 Requires {
+						}
+						0000 Exports {
+						}
+						0000 Opens {
+						}
+						0000 Uses {
+						}
+						0000 Provides {
+						}
+				}
+			}
+		'''.assertUnchanged
+	}
+
 	@Test def attributeConstantValue() {
 		assertEquals('''
 			Attributes {

@@ -27,6 +27,12 @@ import com.itemis.jbc.jbc.U4
 import com.itemis.jbc.jbc.UString
 
 import static extension com.itemis.jbc.binary.ClassFileAccessAPI.*
+import com.itemis.jbc.jbc.Requires
+import com.itemis.jbc.jbc.Exports
+import com.itemis.jbc.jbc.Opens
+import com.itemis.jbc.jbc.Uses
+import com.itemis.jbc.jbc.Provides
+import com.itemis.jbc.jbc.ConstantModule
 
 class ClassFileFactoryAPI {
 
@@ -270,7 +276,7 @@ class ClassFileFactoryAPI {
 		result.attributes = attributes
 		return result
 	}
-	
+
 	static def attributeEnclosingMethod(ConstantUtf8 attributeNameIndex, U4 attributeLength, ConstantClass classIndex,
 		ConstantNameAndType methodIndex) {
 		val result = JbcFactory.eINSTANCE.createEnclosingMethod
@@ -325,6 +331,29 @@ class ClassFileFactoryAPI {
 		val result = JbcFactory.eINSTANCE.createLineNumber
 		result.startPc = startPc
 		result.lineNumber = lineNumber
+		return result
+	}
+
+	static def attributeModule(ConstantUtf8 attributeNameIndex, U4 attributeLength, ConstantModule moduleNameIndex,
+			U2 moduleFlags, ConstantUtf8 moduleVersionIndex, U2 requiresCount, Requires[] requires, U2 exportsCount,
+			Exports[] exports, U2 opensCount, Opens[] opens, U2 usesCount, Uses[] uses, U2 providesCount,
+			Provides[] provides) {
+		val result = JbcFactory.eINSTANCE.createModule
+		result.attributeNameIndex = attributeNameIndex
+		result.attributeLength = attributeLength
+		result.moduleNameIndex = moduleNameIndex
+		result.moduleFlags = moduleFlags
+		result.moduleVersionIndex = moduleVersionIndex
+		result.requiresCount = requiresCount
+		result.requires.addAll(requires)
+		result.exportsCount = exportsCount
+		result.exports.addAll(exports)
+		result.opensCount = opensCount
+		result.opens.addAll(opens)
+		result.usesCount = usesCount
+		result.uses.addAll(uses)
+		result.providesCount = providesCount
+		result.provides.addAll(provides)
 		return result
 	}
 
