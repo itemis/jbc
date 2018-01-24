@@ -8,4 +8,5 @@
    </feature>
    <category-def name="jbc" label="JBC"/>
    <category-def name="jbc.source" label="JBC (Sources)"/>
+   <repository-reference location="http://download.eclipse.org/modeling/tmf/xtext/updates/composite/releases/" enabled="true" />
 </site>
