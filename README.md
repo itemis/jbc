@@ -14,6 +14,10 @@ http://download.itemis.com/jbc/updates/
 
 You can do so by going through the main menu under "Help->Install New Software...", click an "Add..." and insert the URL in the dialog. You can then install the feature "JBC / JBC Feature".
 
+There is also an entry in the eclipse marketplace:
+
+http://marketplace.eclipse.org/content/jbc/
+
 ## Usage
 
 To support the developer the outline displays and interpretation of the byte code with resolved references.
