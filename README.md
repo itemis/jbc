@@ -20,9 +20,9 @@ http://marketplace.eclipse.org/content/jbc/
 
 ## Usage
 
-When first time opening Editor within a project, a dialogue will appear with suggestion to convert to XText project.  
+When first time opening Editor within a project, a dialogue will appear with suggestion to convert to Xtext project.  
 Saying "No" is perfectly ok, the editor does not require the nature.  
-Probably in a future xtext version one can introduce a method in the XtextEditor to opt-out from the dialog.
+Probably in a future Xtext version one can introduce a method in the XtextEditor to opt-out from the dialog.
 [#6](https://github.com/itemis/jbc/issues/6)
 
 ![](https://user-images.githubusercontent.com/1614482/35332903-c09ea550-0147-11e8-9f1b-d2eb17a696b3.png)
