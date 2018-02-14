@@ -15,6 +15,8 @@ import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
 import org.eclipse.xtext.ide.editor.syntaxcoloring.ISemanticHighlightingCalculator
 import org.eclipse.xtext.resource.IResourceServiceProvider
+import org.eclipse.xtext.ui.editor.IXtextEditorCallback
+import org.eclipse.xtext.ui.editor.IXtextEditorCallback.NullImpl
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper
@@ -45,5 +47,7 @@ class JBCUiModule extends AbstractJBCUiModule {
 	def Class<? extends ISemanticHighlightingCalculator> bindISemanticHighlightingCalculator() {
 		JBCSemanticHighlightingCalculator
 	}
+
+	override Class<? extends IXtextEditorCallback> bindIXtextEditorCallback() { NullImpl }
 
 }
