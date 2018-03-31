@@ -44,3 +44,7 @@ It is also possible to open a .class file directly from the Project or Package E
 
 - Introductional article: [4+1 = CAFEBABE: Java Bytecode in Eclipse](https://blogs.itemis.com/de/41-cafebabe-java-bytecode-in-eclipse) (german)
 - Some technical background: [Xtext-Editor für binäre Dateien](https://blogs.itemis.com/de/xtext-editor-fuer-binaere-dateien) (german)
+
+<a href="http://with-eclipse.github.io/" target="_blank">
+<img alt="with-Eclipse logo" src="http://with-eclipse.github.io/with-eclipse-0.jpg" />
+</a>
