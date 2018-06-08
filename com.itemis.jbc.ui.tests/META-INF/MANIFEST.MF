@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.itemis.jbc.ui.tests
 Bundle-Vendor: itemis AG
-Bundle-Version: 1.2.1
+Bundle-Version: 1.2.2
 Bundle-SymbolicName: com.itemis.jbc.ui.tests;singleton:=true
 Bundle-ActivationPolicy: lazy
 Require-Bundle: com.itemis.jbc.ui,

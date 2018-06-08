@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.itemis.jbc</groupId>
 		<artifactId>com.itemis.jbc.parent</artifactId>
-		<version>1.2.1</version>
+		<version>1.2.2</version>
 	</parent>
 	<artifactId>com.itemis.jbc</artifactId>
 	<packaging>eclipse-plugin</packaging>

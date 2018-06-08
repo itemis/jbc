@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.itemis.jbc</groupId>
-	<version>1.2.1</version>
+	<version>1.2.2</version>
 	<artifactId>com.itemis.jbc.parent</artifactId>
 	<packaging>pom</packaging>
 
