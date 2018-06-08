@@ -4,15 +4,25 @@ import java.io.InputStreamReader
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
+import javax.inject.Inject
 import org.eclipse.core.resources.IEncodedStorage
 import org.eclipse.core.resources.IStorage
 import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.IProgressMonitor
 import org.eclipse.ui.IEditorInput
 import org.eclipse.ui.IFileEditorInput
+import org.eclipse.xtext.builder.MonitorBasedCancelIndicator
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.util.StringInputStream
+import org.eclipse.xtext.validation.CheckMode
+import org.eclipse.xtext.validation.IResourceValidator
+import org.eclipse.xtext.diagnostics.Severity
+import org.eclipse.jface.dialogs.ErrorDialog
+import org.eclipse.core.runtime.Status
 
 class JBCEditor extends XtextEditor {
+
+	@Inject IResourceValidator validator
 
 	override protected doSetInput(IEditorInput input) throws CoreException {
 		// The class LastSaveReferenceProvider uses the method IStorage.getContents to access the original content
@@ -31,6 +41,21 @@ class JBCEditor extends XtextEditor {
 	def private IFileEditorInput proxy(IFileEditorInput editorInput) {
 		Proxy.newProxyInstance(this.class.classLoader, #[IFileEditorInput],
 			new IFileEditorInputHandler(editorInput)) as IFileEditorInput
+	}
+
+	override doSave(IProgressMonitor progressMonitor) {
+		if (editorInput instanceof IFileEditorInput) {
+			if ((editorInput as IFileEditorInput).file.name.endsWith(".class")) {
+				val validationResult = document.readOnly(resource | validator.validate(resource, CheckMode.ALL, new MonitorBasedCancelIndicator(progressMonitor)))
+				for (issue : validationResult) {
+					if (issue.severity == Severity.ERROR) {
+						ErrorDialog.openError(shell, "Errors in code", "The byte code contains errors. As the result is not saved as text but directly in code the editor has to be error free if you like to save it.", new Status(Status.ERROR, "JBCEditor", issue.message))
+						return;
+					}
+				}
+			}
+		}
+		super.doSave(progressMonitor)
 	}
 
 }
